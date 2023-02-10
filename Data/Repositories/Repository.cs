@@ -27,7 +27,8 @@ public class Repository<TEntity>
 
     public async Task<TEntity?> GetByIdAsync(int id)
         => await _dbContext.Set<TEntity>()
-                          .FirstOrDefaultAsync(x => x.Id == id);
+                           .AsNoTracking() 
+                           .FirstOrDefaultAsync(x => x.Id == id);
 
     public Task RemoveAsync(TEntity entity)
     {
@@ -35,14 +36,9 @@ public class Repository<TEntity>
         return Task.CompletedTask;
     }
 
-    public Task<TEntity> UpdateAsync(TEntity entity)
+    public Task UpdateAsync(TEntity entity)
     {
         _dbContext.Set<TEntity>().Update(entity);
         return Task.FromResult(entity);
-    }
-
-    Task IRepository<TEntity>.UpdateAsync(TEntity entity)
-    {
-        throw new NotImplementedException();
     }
 }

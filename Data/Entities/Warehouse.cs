@@ -6,7 +6,7 @@ public class Warehouse : BaseEntity
 {
     [Required]
     [StringLength(50)]
-    public string Entity { get; set; } = string.Empty;
+    public string Name { get; set; } = string.Empty;
     [Required]
     [StringLength(30)]
     public string CreatedDate { get; set; } = string.Empty;

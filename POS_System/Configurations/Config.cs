@@ -1,4 +1,6 @@
-﻿using DataLayer.Context;
+﻿using BLL.Interfaces;
+using BLL.Services;
+using DataLayer.Context;
 using DataLayer.Interfaces;
 using DataLayer.Repositories;
 using Microsoft.AspNetCore.Identity;
@@ -27,6 +29,8 @@ namespace API.Configurations
             builder.Services.AddTransient<IWarehouseInterface, WarehouseRepository>();
             builder.Services.AddTransient<IWarehouseItemInterface, WarehouseItemRepository>();
             builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
+
+            builder.Services.AddTransient<IWarehouseService, WarehouseService>();
 
             //Add dbContext
             builder.Services.AddDbContext<AppDbContext>(options =>
