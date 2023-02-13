@@ -1,4 +1,5 @@
 ﻿using BLL.Dtos.WarehouseDtos;
+using BLL.Helpers;
 using BLL.Interfaces;
 using BLL.Validations;
 using DataLayer.Entities;
@@ -59,26 +60,30 @@ public class WarehouseService : IWarehouseService
             throw new ArgumentNullException(nameof(list));
         }
 
-        var dtoList = list.Select(x => (WarehouseViewDto)x);
+        var dtoList = list.Where(i => i.IsDeleted == false)
+                          .Select(x => (WarehouseViewDto)x);
         return dtoList;
     }
 
     /// <summary>
-    /// Get all warehouse list with their items
+    /// Get warehouses with pagination
     /// </summary>
-    /// <returns>List of warehouse</returns>
+    /// <param name="pageSize"></param>
+    /// <param name="pageNumber"></param>
+    /// <returns>Paged list of warehouses</returns>
     /// <exception cref="ArgumentNullException"></exception>
-    public async Task<IEnumerable<WarehouseDto>> GetAllWithItemsAsync()
+    public async Task<PagedList<WarehouseViewDto>> GetWarehousesAsync(int pageSize, int pageNumber)
     {
-        var list = await _unitOfWork.Warehouses.GetAllWithItemsAsync();
+        var list = await _unitOfWork.Warehouses.GetAllAsync();
 
         if (list == null)
         {
             throw new ArgumentNullException(nameof(list));
         }
 
-        var dtoList = list.Select(x => (WarehouseDto)x);
-        return dtoList;
+        var dtoList = list.Where(i => i.IsDeleted == false)
+                          .Select(x => (WarehouseViewDto)x);
+        return PagedList<WarehouseViewDto>.ToPagedList(dtoList, pageSize, pageNumber);
     }
 
     /// <summary>
@@ -112,7 +117,8 @@ public class WarehouseService : IWarehouseService
             throw new ArgumentNullException(nameof(model));
         }
 
-        await _unitOfWork.Warehouses.RemoveAsync(model);
+        model.IsDeleted = true;
+        await _unitOfWork.Warehouses.UpdateAsync(model);
         await _unitOfWork.SaveAsync();
     }
 

@@ -31,6 +31,7 @@ namespace API.Configurations
             builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
 
             builder.Services.AddTransient<IWarehouseService, WarehouseService>();
+            builder.Services.AddTransient<IProductService, ProductService>();
 
             //Add dbContext
             builder.Services.AddDbContext<AppDbContext>(options =>

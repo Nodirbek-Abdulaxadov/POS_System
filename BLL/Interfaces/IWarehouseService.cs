@@ -1,11 +1,12 @@
 ﻿using BLL.Dtos.WarehouseDtos;
+using BLL.Helpers;
 
 namespace BLL.Interfaces;
 
 public interface IWarehouseService
 {
+    Task<PagedList<WarehouseViewDto>> GetWarehousesAsync(int pageSize, int pageNumber);
     Task<IEnumerable<WarehouseViewDto>> GetAllAsync();
-    Task<IEnumerable<WarehouseDto>> GetAllWithItemsAsync();
 
     Task<WarehouseViewDto> GetByIdAsync(int id);
     Task<WarehouseViewDto> AddAsync(AddWarehouseDto dto);

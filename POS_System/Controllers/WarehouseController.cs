@@ -30,12 +30,12 @@ namespace API.Controllers
             }
         }
 
-        [HttpGet("all")]
-        public async Task<ActionResult<IEnumerable<WarehouseDto>>> GetAll()
+        [HttpGet("paged")]
+        public async Task<ActionResult<IEnumerable<WarehouseViewDto>>> Get(int pageSize, int pageNumber)
         {
             try
             {
-                var list = await _warehouseService.GetAllWithItemsAsync();
+                var list = await _warehouseService.GetWarehousesAsync(pageSize, pageNumber);
                 return Ok(list);
             }
             catch (Exception ex)
@@ -68,7 +68,7 @@ namespace API.Controllers
             try
             {
                 var result = await _warehouseService.AddAsync(model);
-                return Ok(result);
+                return StatusCode(201, result);
             }
             catch (Exception ex)
             {
