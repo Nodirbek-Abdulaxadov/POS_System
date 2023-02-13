@@ -88,11 +88,13 @@ namespace API.Configurations
 
         public static void AddMiddlewares(this WebApplication app)
         {
-            if (app.Environment.IsDevelopment())
-            {
+            //if (app.Environment.IsDevelopment())
+            //{
+            //    app.UseSwagger();
+            //    app.UseSwaggerUI();
+            //}
                 app.UseSwagger();
                 app.UseSwaggerUI();
-            }
 
             app.UseStaticFiles();
 
