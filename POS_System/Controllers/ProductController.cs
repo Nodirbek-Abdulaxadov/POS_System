@@ -1,7 +1,5 @@
 ﻿using BLL.Dtos.ProductDtos;
-using BLL.Dtos.WarehouseDtos;
 using BLL.Interfaces;
-using BLL.Services;
 using BLL.Validations;
 using Microsoft.AspNetCore.Mvc;
 
@@ -39,6 +37,10 @@ namespace API.Controllers
             {
                 var list = await _productService.GetProductsAsync(pageSize, pageNumber);
                 return Ok(list);
+            }
+            catch (MarketException ex)
+            {
+                return NotFound(ex.Message);
             }
             catch (Exception ex)
             {
@@ -83,6 +85,43 @@ namespace API.Controllers
             catch (Exception ex)
             {
                 return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpPut]
+        public async Task<ActionResult<ProductViewDto>> Put(ProductUpdateDto dto)
+        {
+            try
+            {
+                var res = await _productService.UpdateAsync(dto);
+                return Ok(res);
+            }
+            catch (MarketException)
+            {
+                return NotFound();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Remove(int id)
+        {
+            try
+            {
+                var model = await _productService.GetByIdAsync(id);
+                await _productService.RemoveAsync(id);
+                return NoContent();
+            }
+            catch (ArgumentNullException)
+            {
+                return NotFound();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
         }
     }

@@ -1,4 +1,6 @@
-﻿namespace BLL.Dtos.ProductDtos;
+﻿using DataLayer.Entities;
+
+namespace BLL.Dtos.ProductDtos;
 
 public class ProductUpdateDto
 {
@@ -8,4 +10,15 @@ public class ProductUpdateDto
     public string Color { get; set; } = string.Empty;
     public string Size { get; set; } = string.Empty;
     public string Barcode { get; set; } = string.Empty;
+
+    public static explicit operator Product(ProductUpdateDto v)
+        => new Product()
+        {
+            Id = v.Id,
+            Name = v.Name,
+            Brand = v.Brand,
+            Color = v.Color,
+            Size = v.Size,
+            Barcode = v.Barcode
+        };
 }

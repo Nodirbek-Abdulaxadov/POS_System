@@ -79,11 +79,26 @@ public class ProductService : IProductService
         return (ProductViewDto)product;
     }
 
+    /// <summary>
+    /// Get paged list of products
+    /// </summary>
+    /// <param name="pageSize"></param>
+    /// <param name="pageNumber"></param>
+    /// <returns>Paged list</returns>
     public async Task<PagedList<ProductViewDto>> GetProductsAsync(int pageSize, int pageNumber)
     {
         var products = await _unitOfWork.Products.GetAllAsync();
         var list = products.Where(x => x.IsDeleted == false)
                        .Select(p => (ProductViewDto)p);
+
+        PagedList<ProductViewDto> pagedList = new ( list.ToList(), 
+                                                    list.Count(), 
+                                                    pageSize, pageNumber);
+
+        if (pageNumber > pagedList.TotalPages || pageNumber < 1)
+        {
+            throw new MarketException("Page not fount!");
+        }
 
         return PagedList<ProductViewDto>.ToPagedList(list, pageSize, pageNumber);
     }
@@ -128,8 +143,7 @@ public class ProductService : IProductService
             throw new MarketException("Product is not found!");
         }
 
-        model.IsDeleted = true;
-        await _unitOfWork.Products.UpdateAsync(model);
+        await _unitOfWork.Products.UpdateAsync((Product)dto);
         await _unitOfWork.SaveAsync();
 
         return (ProductViewDto)model;

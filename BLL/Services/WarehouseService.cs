@@ -1,4 +1,5 @@
-﻿using BLL.Dtos.WarehouseDtos;
+﻿using BLL.Dtos.ProductDtos;
+using BLL.Dtos.WarehouseDtos;
 using BLL.Helpers;
 using BLL.Interfaces;
 using BLL.Validations;
@@ -83,6 +84,16 @@ public class WarehouseService : IWarehouseService
 
         var dtoList = list.Where(i => i.IsDeleted == false)
                           .Select(x => (WarehouseViewDto)x);
+
+        PagedList<WarehouseViewDto> pagedList = new (dtoList.ToList(),
+                                                     dtoList.Count(),
+                                                     pageSize, pageNumber);
+
+        if (pageNumber > pagedList.TotalPages || pageNumber < 1)
+        {
+            throw new MarketException("Page not fount!");
+        }
+
         return PagedList<WarehouseViewDto>.ToPagedList(dtoList, pageSize, pageNumber);
     }
 

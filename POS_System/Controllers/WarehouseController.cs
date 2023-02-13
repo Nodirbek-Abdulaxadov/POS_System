@@ -38,6 +38,10 @@ namespace API.Controllers
                 var list = await _warehouseService.GetWarehousesAsync(pageSize, pageNumber);
                 return Ok(list);
             }
+            catch (MarketException ex)
+            {
+                return NotFound(ex.Message);
+            }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
@@ -101,7 +105,7 @@ namespace API.Controllers
             {
                 var model = await _warehouseService.GetByIdAsync(id);
                 await _warehouseService.RemoveAsync(id);
-                return Ok();
+                return NoContent();
             }
             catch (ArgumentNullException)
             {
