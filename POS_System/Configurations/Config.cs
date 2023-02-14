@@ -1,10 +1,13 @@
 ﻿using BLL.Interfaces;
 using BLL.Services;
+using Core;
 using DataLayer.Context;
 using DataLayer.Interfaces;
 using DataLayer.Repositories;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
 namespace API.Configurations
@@ -32,44 +35,45 @@ namespace API.Configurations
 
             builder.Services.AddTransient<IWarehouseService, WarehouseService>();
             builder.Services.AddTransient<IProductService, ProductService>();
+            builder.Services.AddTransient<IUserService, UserService>();
 
             //Add dbContext
             builder.Services.AddDbContext<AppDbContext>(options =>
                 options.UseNpgsql(builder.Configuration.GetConnectionString("LocalDB")));
 
             #region auth
-            ////Add Identity
-            //builder.Services.AddIdentity<User, IdentityRole>()
-            //    .AddEntityFrameworkStores<HotelDbContext>()
-            //.AddDefaultTokenProviders();
+            //Add Identity
+            builder.Services.AddIdentity<User, IdentityRole>()
+                .AddEntityFrameworkStores<AppDbContext>()
+            .AddDefaultTokenProviders();
 
-            ////Add Authentication
-            //var tokenParameters = new TokenValidationParameters()
-            //{
-            //    ValidateIssuerSigningKey = true,
-            //    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(builder.Configuration["JwtSettings:securityKey"])),
+            //Add Authentication
+            var tokenParameters = new TokenValidationParameters()
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(builder.Configuration["JwtSettings:securityKey"]??"")),
 
-            //    ValidateIssuer = true,
-            //    ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
+                ValidateIssuer = true,
+                ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
 
-            //    ValidateAudience = true,
-            //    ValidAudience = builder.Configuration["JwtSettings:Audence"],
-            //    ValidateLifetime = true,
-            //    ClockSkew = TimeSpan.Zero
-            //};
-            //builder.Services.AddSingleton(tokenParameters);
-            //builder.Services.AddAuthentication(options =>
-            //{
-            //    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            //    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            //    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-            //})
-            //    .AddJwtBearer(options =>
-            //    {
-            //        options.SaveToken = true;
-            //        options.RequireHttpsMetadata = false;
-            //        options.TokenValidationParameters = tokenParameters;
-            //    });
+                ValidateAudience = true,
+                ValidAudience = builder.Configuration["JwtSettings:Audence"],
+                ValidateLifetime = true,
+                ClockSkew = TimeSpan.Zero
+            };
+            builder.Services.AddSingleton(tokenParameters);
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+                .AddJwtBearer(options =>
+                {
+                    options.SaveToken = true;
+                    options.RequireHttpsMetadata = false;
+                    options.TokenValidationParameters = tokenParameters;
+                });
             #endregion
 
             //Add cors
@@ -88,13 +92,8 @@ namespace API.Configurations
 
         public static void AddMiddlewares(this WebApplication app)
         {
-            //if (app.Environment.IsDevelopment())
-            //{
-            //    app.UseSwagger();
-            //    app.UseSwaggerUI();
-            //}
-                app.UseSwagger();
-                app.UseSwaggerUI();
+            app.UseSwagger();
+            app.UseSwaggerUI();
 
             app.UseStaticFiles();
 
@@ -106,6 +105,8 @@ namespace API.Configurations
             app.UseAuthorization();
 
             app.MapControllers();
+
+            AppDbInitializer.SeedRolesToDatabase(app).Wait();
         }
     }
 }
