@@ -104,7 +104,7 @@ public class UserService : IUserService
         var token = new JwtSecurityToken(
             issuer: _configuration["JwtSettings:Issuer"],
             audience: _configuration["JwtSettings:Audence"],
-            expires: DateTime.UtcNow.AddSeconds(10),
+            expires: DateTime.Now.AddDays(1),
             claims: authClaims,
             signingCredentials: new SigningCredentials(authKey, SecurityAlgorithms.HmacSha256));
 

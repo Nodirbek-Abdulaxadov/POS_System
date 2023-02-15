@@ -1,12 +1,14 @@
 ﻿using BLL.Dtos.WarehouseDtos;
 using BLL.Interfaces;
 using BLL.Validations;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class WarehouseController : ControllerBase
     {
         private readonly IWarehouseService _warehouseService;
