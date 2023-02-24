@@ -61,8 +61,7 @@ public class WarehouseService : IWarehouseService
             throw new ArgumentNullException(nameof(list));
         }
 
-        var dtoList = list.Where(i => i.IsDeleted == false)
-                          .Select(x => (WarehouseViewDto)x);
+        var dtoList = list.Select(x => (WarehouseViewDto)x);
         return dtoList;
     }
 
@@ -82,8 +81,7 @@ public class WarehouseService : IWarehouseService
             throw new ArgumentNullException(nameof(list));
         }
 
-        var dtoList = list.Where(i => i.IsDeleted == false)
-                          .Select(x => (WarehouseViewDto)x);
+        var dtoList = list.Select(x => (WarehouseViewDto)x);
 
         PagedList<WarehouseViewDto> pagedList = new (dtoList.ToList(),
                                                      dtoList.Count(),

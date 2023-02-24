@@ -71,11 +71,6 @@ public class ProductService : IProductService
             throw new ArgumentNullException(nameof(product));
         }
 
-        if (product.IsDeleted)
-        {
-            throw new MarketException("Product has been deleted!");
-        }
-
         return (ProductViewDto)product;
     }
 
@@ -88,8 +83,7 @@ public class ProductService : IProductService
     public async Task<PagedList<ProductViewDto>> GetProductsAsync(int pageSize, int pageNumber)
     {
         var products = await _unitOfWork.Products.GetAllAsync();
-        var list = products.Where(x => x.IsDeleted == false)
-                       .Select(p => (ProductViewDto)p);
+        var list = products.Select(p => (ProductViewDto)p);
 
         PagedList<ProductViewDto> pagedList = new ( list.ToList(), 
                                                     list.Count(), 
