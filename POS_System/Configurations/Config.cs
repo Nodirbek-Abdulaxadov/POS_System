@@ -35,6 +35,8 @@ namespace API.Configurations
 
             builder.Services.AddTransient<IWarehouseService, WarehouseService>();
             builder.Services.AddTransient<IProductService, ProductService>();
+            builder.Services.AddTransient<IWarehouseItemService, WarehouseItemService>();
+            builder.Services.AddTransient<ICustomerService, CustomerService>();
             builder.Services.AddTransient<IUserService, UserService>();
 
             //Add dbContext

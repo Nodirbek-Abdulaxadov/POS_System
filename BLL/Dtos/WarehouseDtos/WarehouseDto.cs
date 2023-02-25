@@ -1,4 +1,5 @@
-﻿using BLL.Dtos.WarehouseItemDtos;
+﻿using BLL.Dtos.CustomerDtos;
+using BLL.Dtos.WarehouseItemDtos;
 using DataLayer.Entities;
 
 namespace BLL.Dtos.WarehouseDtos;

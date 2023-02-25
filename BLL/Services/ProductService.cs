@@ -82,8 +82,7 @@ public class ProductService : IProductService
     /// <returns>Paged list</returns>
     public async Task<PagedList<ProductViewDto>> GetProductsAsync(int pageSize, int pageNumber)
     {
-        var products = await _unitOfWork.Products.GetAllAsync();
-        var list = products.Select(p => (ProductViewDto)p);
+        var list = await GetAllAsync();
 
         PagedList<ProductViewDto> pagedList = new ( list.ToList(), 
                                                     list.Count(), 

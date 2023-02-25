@@ -1,5 +1,7 @@
-﻿using BLL.Dtos.ProductDtos;
+﻿using BLL.Dtos.CustomerDtos;
+using BLL.Dtos.ProductDtos;
 using DataLayer.Entities;
+using DataLayer.Entities.Selling;
 
 namespace BLL.Validations;
 
@@ -20,6 +22,17 @@ public static class Valide
                dto.Size == product.Size &&
                dto.Brand == product.Brand &&
                dto.Barcode == product.Barcode;
+    }
+
+    public static bool IsEqual(this Customer customer, AddCustomerDto dto)
+    {
+        if (dto == null || customer == null)
+        {
+            return false;
+        }
+
+        return customer.FullName == dto.FullName &&
+               customer.PhoneNumber == dto.PhoneNumber;
     }
 
     // product validation

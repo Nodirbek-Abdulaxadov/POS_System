@@ -1,6 +1,7 @@
 ﻿using BLL.Dtos.WarehouseDtos;
 using BLL.Dtos.WarehouseItemDtos;
 using BLL.Interfaces;
+using BLL.Services;
 using BLL.Validations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -10,21 +11,21 @@ namespace API.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class WarehouseController : ControllerBase
+    public class WarehouseItemController : ControllerBase
     {
-        private readonly IWarehouseService _itemService;
+        private readonly IWarehouseItemService _itemService;
 
-        public WarehouseController(IWarehouseService warehouseService)
+        public WarehouseItemController(IWarehouseItemService itemService)
         {
-            _itemService = warehouseService;
+            _itemService = itemService;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<WarehouseItemDto>>> Get()
+        public async Task<ActionResult<IEnumerable<WarehouseItemDto>>> Get(int warehouseId)
         {
             try
             {
-                var list = await _itemService.GetAllAsync();
+                var list = await _itemService.GetAllAsync(warehouseId);
                 return Ok(list);
             }
             catch (Exception ex)
@@ -32,13 +33,12 @@ namespace API.Controllers
                 return BadRequest(ex.Message);
             }
         }
-
         [HttpGet("paged")]
-        public async Task<ActionResult<IEnumerable<WarehouseItemDto>>> Get(int pageSize, int pageNumber)
+        public async Task<ActionResult<IEnumerable<WarehouseItemDto>>> Get(int pageSize, int pageNumber, int warehouseId)
         {
             try
             {
-                var list = await _itemService.GetWarehousesAsync(pageSize, pageNumber);
+                var list = await _itemService.GetPagedAsync(pageSize, pageNumber, warehouseId);
                 return Ok(list);
             }
             catch (MarketException ex)
@@ -52,7 +52,7 @@ namespace API.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<WarehouseItemDto>> Get(int id)
+        public async Task<ActionResult<WarehouseItemDto>> GetById(int id)
         {
             try
             {
@@ -70,30 +70,12 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<WarehouseItemDto>> Post(AddWarehouseDto model)
+        public async Task<ActionResult<WarehouseItemDto>> Post(AddWarehouseItemDto model)
         {
             try
             {
                 var result = await _itemService.AddAsync(model);
                 return StatusCode(201, result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-        [HttpPut]
-        public async Task<ActionResult<WarehouseItemDto>> Put(WarehouseUpdateDto model)
-        {
-            try
-            {
-                var res = await _itemService.UpdateAsync(model);
-                return Ok(res);
-            }
-            catch (MarketException)
-            {
-                return NotFound();
             }
             catch (Exception ex)
             {

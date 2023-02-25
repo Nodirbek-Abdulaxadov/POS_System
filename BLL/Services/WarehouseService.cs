@@ -74,14 +74,7 @@ public class WarehouseService : IWarehouseService
     /// <exception cref="ArgumentNullException"></exception>
     public async Task<PagedList<WarehouseViewDto>> GetWarehousesAsync(int pageSize, int pageNumber)
     {
-        var list = await _unitOfWork.Warehouses.GetAllAsync();
-
-        if (list == null)
-        {
-            throw new ArgumentNullException(nameof(list));
-        }
-
-        var dtoList = list.Select(x => (WarehouseViewDto)x);
+        var dtoList = await GetAllAsync();
 
         PagedList<WarehouseViewDto> pagedList = new (dtoList.ToList(),
                                                      dtoList.Count(),

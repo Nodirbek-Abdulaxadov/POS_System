@@ -7,6 +7,7 @@ public class Product : BaseEntity
     [Required]
     [StringLength(50)]
     public string Name { get; set; } = string.Empty;
+    public int WarningCount { get; set; }
     [StringLength(50)]
     public string Brand { get; set; } = string.Empty;
     [StringLength(20)]

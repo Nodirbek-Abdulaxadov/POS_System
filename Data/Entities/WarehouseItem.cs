@@ -6,7 +6,6 @@ public class WarehouseItem : BaseEntity
 {
     [Required]
     public int Quantity { get; set; }
-    public int WarningCount { get; set; }
     [Required]
     [StringLength(30)]
     public string BroughtDate { get; set; } = string.Empty;
