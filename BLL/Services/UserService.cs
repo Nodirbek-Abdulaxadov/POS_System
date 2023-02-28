@@ -76,6 +76,13 @@ public class UserService : IUserService
         var userExist = await FindUserByPhoneNumberAsync(viewModel.PhoneNumber);
         if (userExist != null && await _userManager.CheckPasswordAsync(userExist, viewModel.Password))
         {
+            var token = _dbContext.RefreshTokens.FirstOrDefault(r => r.UserId == Guid.Parse(userExist.Id));
+            if (token != null)
+            {
+                _dbContext.RefreshTokens.Remove(token);
+                _dbContext.SaveChanges();
+            }
+
             return JsonConvert.SerializeObject(await GenerateTokenAsync(userExist, null));
         }
 
@@ -151,7 +158,7 @@ public class UserService : IUserService
     public async Task<AuthResultViewModel> VerifyAndGenerateTokenAsync(TokenRequstViewModel viewModel)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
-        var storedToken = await _dbContext.RefreshTokens.FirstOrDefaultAsync(i => i.Token == viewModel.Token);
+        var storedToken = _dbContext.RefreshTokens.FirstOrDefault(i => i.Token == viewModel.RefreshToken);
 
         var user = await _userManager.FindByIdAsync(storedToken.UserId.ToString());
 
