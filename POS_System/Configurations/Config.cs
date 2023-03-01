@@ -8,6 +8,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Serilog.Events;
+using Serilog.Formatting.Json;
+using Serilog;
 using System.Text;
 
 namespace API.Configurations
@@ -17,6 +20,15 @@ namespace API.Configurations
         static readonly string CORSOpenPolicy = "OpenCORSPolicy";
         public static void AddServices(this WebApplicationBuilder builder)
         {
+            var logger = new LoggerConfiguration()
+            .MinimumLevel.Debug()
+            .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+            .Enrich.FromLogContext()
+            .WriteTo.File("logs/log-.txt", rollingInterval: RollingInterval.Day)
+            .CreateLogger();
+
+            builder.Host.UseSerilog(logger);
+
             //API Services
             builder.Services.AddControllersWithViews();
             builder.Services.AddEndpointsApiExplorer();
@@ -94,6 +106,9 @@ namespace API.Configurations
 
         public static void AddMiddlewares(this WebApplication app)
         {
+            // Use Serilog as the logging provider
+            app.UseSerilogRequestLogging();
+
             app.UseSwagger();
             app.UseSwaggerUI();
 
