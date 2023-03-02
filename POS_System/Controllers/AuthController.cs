@@ -51,8 +51,13 @@ namespace API.Controllers
             }
             catch (MarketException ex)
             {
-                _logger.LogError("\n" + ex.Message.Substring(0, 100));
+                _logger.LogError("\n" + ex.Message);
                 return Unauthorized(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error loading {ex.Message}");
+                return BadRequest(ex.Message);
             }
         }
 

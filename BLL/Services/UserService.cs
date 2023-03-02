@@ -74,7 +74,10 @@ public class UserService : IUserService
     public async Task<string> LoginUserAsync(LoginUserViewModel viewModel)
     {
         var userExist = await FindUserByPhoneNumberAsync(viewModel.PhoneNumber);
-        if (userExist != null && await _userManager.CheckPasswordAsync(userExist, viewModel.Password))
+
+        var passwordIsValid = await _userManager.CheckPasswordAsync(userExist, viewModel.Password);
+
+        if (userExist != null && passwordIsValid)
         {
             var token = _dbContext.RefreshTokens.FirstOrDefault(r => r.UserId == Guid.Parse(userExist.Id));
             if (token != null)
