@@ -8,8 +8,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="assets\left.png" />
     <None Remove="assets\login.png" />
     <None Remove="assets\login_bg.jpg" />
+    <None Remove="assets\logout.png" />
+    <None Remove="assets\user.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -22,11 +25,20 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="assets\left.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="assets\login.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
     <Resource Include="assets\login_bg.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="assets\logout.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="assets\user.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>
 
