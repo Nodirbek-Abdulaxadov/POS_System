@@ -97,9 +97,8 @@ namespace API.Configurations
                   name: CORSOpenPolicy,
                   builder => {
                       builder.AllowAnyOrigin()
-                      .AllowCredentials()
-                      .AllowAnyHeader()
-                      .AllowAnyMethod();
+                      .AllowAnyMethod()
+                      .AllowAnyHeader();
                   });
             });
         }
