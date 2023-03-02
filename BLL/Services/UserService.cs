@@ -160,6 +160,11 @@ public class UserService : IUserService
         var tokenHandler = new JwtSecurityTokenHandler();
         var storedToken = _dbContext.RefreshTokens.FirstOrDefault(i => i.Token == viewModel.RefreshToken);
 
+        if (storedToken == null)
+        {
+            throw new ArgumentNullException(nameof(viewModel));
+        }
+
         var user = await _userManager.FindByIdAsync(storedToken.UserId.ToString());
 
         try
