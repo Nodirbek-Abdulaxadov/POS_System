@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataLayer", "Data\DataLayer
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BLL", "BLL\BLL.csproj", "{88FC47C0-FA8F-4799-8100-FC731A12666F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Core\Core.csproj", "{8BC23B5F-ACDD-46AC-8871-9FFB045772E6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core", "Core\Core.csproj", "{8BC23B5F-ACDD-46AC-8871-9FFB045772E6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Seller.App", "Seller.App\Seller.App.csproj", "{75705A11-950B-4231-A2E5-51AEB6425761}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{8BC23B5F-ACDD-46AC-8871-9FFB045772E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8BC23B5F-ACDD-46AC-8871-9FFB045772E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8BC23B5F-ACDD-46AC-8871-9FFB045772E6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{75705A11-950B-4231-A2E5-51AEB6425761}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75705A11-950B-4231-A2E5-51AEB6425761}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75705A11-950B-4231-A2E5-51AEB6425761}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75705A11-950B-4231-A2E5-51AEB6425761}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -16,6 +16,13 @@ public class WarehouseItemService : IWarehouseItemService
         _unitOfWork = unitOfWork;
     }
 
+    /// <summary>
+    /// Create new WarehouseItem
+    /// </summary>
+    /// <param name="dto"></param>
+    /// <returns>New Warehouse item</returns>
+    /// <exception cref="ArgumentNullException"></exception>
+    /// <exception cref="MarketException"></exception>
     public async Task<WarehouseItemDto> AddAsync(AddWarehouseItemDto dto)
     {
         if (dto == null)

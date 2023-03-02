@@ -25,17 +25,17 @@ namespace API.Controllers
             try
             {
                 var result = await _userService.CreateUserAsync(viewModel);
-                _logger.LogInformation($"New user created: \"{viewModel.FullName}\"");
+                _logger.LogInformation($"\nNew user created: \"{viewModel.FullName}\"");
                 return StatusCode(201, result);
             }
             catch (MarketException ex)
             {
-                _logger.LogError(ex.Message);
+                _logger.LogError("\n"+ex.Message.Substring(0, 100));
                 return StatusCode(409, ex.Message);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message);
+                _logger.LogError("\n" + ex.Message.Substring(0, 100));
                 return BadRequest(ex.Message);
             }
         }
@@ -46,12 +46,12 @@ namespace API.Controllers
             try
             {
                 var result = await _userService.LoginUserAsync(viewModel);
-                _logger.LogInformation($"User login: \"{viewModel.PhoneNumber}\"");
+                _logger.LogInformation($"\nUser login: \"{viewModel.PhoneNumber}\"");
                 return Ok(result);
             }
             catch (MarketException ex)
             {
-                _logger.LogError(ex.Message);
+                _logger.LogError("\n" + ex.Message.Substring(0, 100));
                 return Unauthorized(ex.Message);
             }
         }
@@ -63,15 +63,16 @@ namespace API.Controllers
             {
                 if (!ModelState.IsValid)
                 {
-                    _logger.LogError("Given model state invalid");
+                    _logger.LogWarning("\nGiven model state invalid");
                     return BadRequest();
                 }
                 var result = await _userService.VerifyAndGenerateTokenAsync(viewModel);
+                _logger.LogInformation("\nToken refreshed!");
                 return Ok(result);
             }
             catch (MarketException ex)
             {
-                _logger.LogError(ex.Message);
+                _logger.LogError("\n" + ex.Message.Substring(0, 100));
                 return Unauthorized(ex.Message);
             }
         }
