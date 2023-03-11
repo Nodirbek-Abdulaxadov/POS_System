@@ -96,7 +96,9 @@ namespace API.Configurations
                 options.AddPolicy(
                   name: CORSOpenPolicy,
                   builder => {
-                      builder.AllowAnyOrigin()
+                      builder.WithOrigins("http://localhost:4200")
+                             .AllowCredentials()
+                             //.AllowAnyOrigin()
                              .AllowAnyMethod()
                              .AllowAnyHeader();
                   });

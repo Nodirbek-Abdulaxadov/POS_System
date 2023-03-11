@@ -74,6 +74,32 @@ public class ProductService : IProductService
         return (ProductViewDto)product;
     }
 
+    public async Task<List<DProduct>> GetDProducts()
+    {
+        var products = await _unitOfWork.Products.GetAllAsync();
+        var warehouseItems = await _unitOfWork.WarehouseItems.GetAllAsync();
+        List<DProduct> dProducts = new List<DProduct>();
+        foreach (var product in products)
+        {
+            var productItems = warehouseItems.Where(d => d.ProductId == product.Id);
+            var warItem = productItems.First();
+            var model = new DProduct()
+            {
+                Id = product.Id,
+                Name = product.Name,
+                Barcode = product.Barcode,
+                Brand = product.Brand,
+                Color = product.Color,
+                Size = product.Size,
+                Price = warItem.SellingPrice,
+                AvailableCount = productItems.Sum(d => d.Quantity)
+            };
+            dProducts.Add(model);
+        }
+
+        return dProducts;
+    }
+
     /// <summary>
     /// Get paged list of products
     /// </summary>

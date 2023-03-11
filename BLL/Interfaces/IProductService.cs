@@ -5,6 +5,7 @@ namespace BLL.Interfaces;
 
 public interface IProductService
 {
+    Task<List<DProduct>> GetDProducts();
     Task<PagedList<ProductViewDto>> GetProductsAsync(int pageSize, int pageNumber);
     Task<IEnumerable<ProductViewDto>> GetAllAsync();
 

@@ -8,7 +8,7 @@ namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class ProductController : ControllerBase
     {
         private readonly IProductService _productService;
@@ -28,6 +28,19 @@ namespace API.Controllers
             }
             catch (Exception ex) 
             { 
+                return StatusCode(500, ex.Message);
+            }
+        }
+        [HttpGet("d")]
+        public async Task<ActionResult<IEnumerable<ProductViewDto>>> DGet()
+        {
+            try
+            {
+                var products = await _productService.GetDProducts();
+                return Ok(products);
+            }
+            catch (Exception ex)
+            {
                 return StatusCode(500, ex.Message);
             }
         }
