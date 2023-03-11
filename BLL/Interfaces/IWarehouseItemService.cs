@@ -11,6 +11,6 @@ public interface IWarehouseItemService
     Task<WarehouseItemDto> GetByIdAsync(int id);
     Task<WarehouseItemDto> AddAsync(AddWarehouseItemDto dto);
 
-    //Task<WarehouseViewDto> UpdateAsync(WarehouseUpdateDto dto);
+    Task<WarehouseItemDto> Update(UpdateWarehouseItemDto dto);
     Task RemoveAsync(int id);
 }

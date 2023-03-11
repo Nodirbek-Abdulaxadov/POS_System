@@ -84,6 +84,25 @@ public class WarehouseItemService : IWarehouseItemService
         return PagedList<WarehouseItemDto>.ToPagedList(dtoList, pageSize, pageNumber);
     }
 
+    public async Task<WarehouseItemDto> Update(UpdateWarehouseItemDto dto)
+    {
+        if (!dto.IsValid() || dto == null)
+        {
+            throw new MarketException("Invalid model!");
+        }
+
+        var model = await _unitOfWork.WarehouseItems.GetByIdAsync(dto.Id);
+        if (model == null)
+        {
+            throw new ArgumentNullException(nameof(dto));
+        }
+
+        await _unitOfWork.WarehouseItems.UpdateAsync((WarehouseItem)dto);
+        await _unitOfWork.SaveAsync();
+
+        return await GetByIdAsync(model.Id);
+    }
+    
     public async Task RemoveAsync(int id)
     {
         var model = await _unitOfWork.WarehouseItems.GetByIdAsync(id);

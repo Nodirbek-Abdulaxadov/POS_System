@@ -10,6 +10,7 @@ public class ProductUpdateDto
     public string Color { get; set; } = string.Empty;
     public string Size { get; set; } = string.Empty;
     public string Barcode { get; set; } = string.Empty;
+    public int WarningCount { get; set; }
 
     public static explicit operator Product(ProductUpdateDto v)
         => new Product()
@@ -19,6 +20,7 @@ public class ProductUpdateDto
             Brand = v.Brand,
             Color = v.Color,
             Size = v.Size,
-            Barcode = v.Barcode
+            Barcode = v.Barcode,
+            WarningCount = v.WarningCount,
         };
 }

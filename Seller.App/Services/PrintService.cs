@@ -1,16 +1,19 @@
 ﻿using BLL.Dtos.TransactionDtos;
 using ESC_POS_USB_NET.Printer;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Text;
 
 namespace Seller.App.Services;
 
 public class PrintService : IDisposable
 {
+    private readonly string PRINTER_NAME = Path.Combine(Path.GetTempPath(), "40c765b3-3e9c-4dd7-b592-f53c83c0bd4a.txt");
     public string printerName { get; set; } = string.Empty;
-    Printer printer;
+    Printer? printer;
     public PrintService()
 	{
 		//initialize print name
@@ -91,6 +94,53 @@ public class PrintService : IDisposable
 
         printer.FullPaperCut();
         printer.PrintDocument();
+    }
+
+    public void Test()
+    {
+        printer = new Printer(printerName, "UTF-8");
+        Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+        printer.Separator();
+        printer.AlignCenter();
+        printer.Append("\n");
+        printer.BoldMode("Test printer!");
+        printer.Append("\n");
+        printer.Separator();
+        printer.FullPaperCut();
+        printer.PrintDocument();
+    }
+    public string GetSavedPrinterName()
+    {
+        try
+        {
+            StreamReader streamReader = new StreamReader(PRINTER_NAME);
+            string res = streamReader.ReadToEnd();
+            streamReader.Close();
+            return res;
+        }
+        catch(Exception)
+        {
+            return string.Empty;
+        }
+    }
+
+    public void SavePrinter(string name)
+    {
+        StreamWriter sw = new StreamWriter(PRINTER_NAME);
+        sw.Write(name);
+        sw.Flush();
+        sw.Close();
+    }
+
+    public List<string> ConnectedPrinters()
+    {
+        List<string> printers = new List<string>();
+        foreach (var print in System.Drawing.Printing.PrinterSettings.InstalledPrinters)
+        {
+            printers.Add(print.ToString());
+        }
+
+        return printers;
     }
 
     public void Dispose()

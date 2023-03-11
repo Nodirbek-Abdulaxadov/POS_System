@@ -10,7 +10,7 @@ namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class WarehouseItemController : ControllerBase
     {
         private readonly IWarehouseItemService _itemService;
@@ -80,6 +80,28 @@ namespace API.Controllers
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut]
+        public async Task<ActionResult<WarehouseItemDto>> Put(UpdateWarehouseItemDto dto)
+        {
+            try
+            {
+                var result = await _itemService.Update(dto);
+                return Ok(result);
+            }
+            catch (MarketException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (ArgumentNullException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
             }
         }
 

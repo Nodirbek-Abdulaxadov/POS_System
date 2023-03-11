@@ -370,7 +370,11 @@
                         <Button Grid.Column="1"
                                 FontSize="36"
                                 Height="65"
-                                Margin="5,0">X</Button>
+                                Margin="5,0"
+                                x:Name="setings"
+                                Click="setings_Click">
+                            <Image Source="/assets/settings.png"/>
+                        </Button>
                         <Button Grid.Column="2"
                                 FontSize="36"
                                 Height="65"

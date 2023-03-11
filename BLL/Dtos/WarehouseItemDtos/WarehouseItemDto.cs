@@ -5,11 +5,9 @@ namespace BLL.Dtos.WarehouseItemDtos;
 public class WarehouseItemDto : BaseDto
 {
     public int Quantity { get; set; }
-    public int WarningCount { get; set; }
     public string BroughtDate { get; set; } = string.Empty;
     public decimal IncomingPrice { get; set; }
     public decimal SellingPrice { get; set; }
-
     public int ProductId { get; set; }
     public int AdminId { get; set; }
     public int WarehouseId { get; set; }

@@ -62,6 +62,7 @@ namespace Seller.App.Pages
                     vm.Add(tr);
                 }
                 barcode_input.Clear();
+                SetTotalPrice();
             }
         }
 
@@ -78,6 +79,7 @@ namespace Seller.App.Pages
         {
             var item = transactions_table.SelectedItem as TransactionDto;
             vm.Transactions.Remove(item);
+            SetTotalPrice();
         }
 
         private void minus_btn_Click(object sender, RoutedEventArgs e)
@@ -127,7 +129,11 @@ namespace Seller.App.Pages
             vm.Transactions = transactions;
 
             transactions_table.ItemsSource = vm.Transactions;
+            SetTotalPrice();
+        }
 
+        private void SetTotalPrice()
+        {
             var totalPrice = vm.Transactions.Sum(tr => tr.TotalPrice);
             total.Text = totalPrice.ToString();
         }
@@ -147,6 +153,12 @@ namespace Seller.App.Pages
                 printService.printerName = "XP-80";
                 printService.Print(vm.Transactions.ToList(), "Nodirbek Abdulaxadov", 1);
             }
+        }
+
+        private void setings_Click(object sender, RoutedEventArgs e)
+        {
+            PrinterSetup printer = new PrinterSetup();
+            printer.ShowDialog();
         }
     }
 }

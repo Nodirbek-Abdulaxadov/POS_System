@@ -9,6 +9,7 @@ public class ProductViewDto : BaseDto
     public string Color { get; set; } = string.Empty;
     public string Size { get; set; } = string.Empty;
     public string Barcode { get; set; } = string.Empty;
+    public int WarningCount { get; set; } = 0;
     public int AdminId { get; set; }
 
     public static explicit operator ProductViewDto(Product v)
@@ -21,6 +22,7 @@ public class ProductViewDto : BaseDto
             Size = v.Size,
             Barcode = v.Barcode,
             IsDeleted = v.IsDeleted,
+            WarningCount = v.WarningCount,
             AdminId = v.AdminId
         };
 }

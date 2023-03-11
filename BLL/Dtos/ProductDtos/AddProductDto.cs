@@ -9,6 +9,7 @@ public class AddProductDto
     public string Color { get; set; } = string.Empty;
     public string Size { get; set; } = string.Empty;
     public string Barcode { get; set; } = string.Empty;
+    public int WarningCount { get; set; }
 
     public int AdminId { get; set; }
 
@@ -21,6 +22,7 @@ public class AddProductDto
             Size = v.Size,
             Barcode = v.Barcode,
             AdminId = v.AdminId,
+            WarningCount = v.WarningCount,
             AddedDate = DateTime.Now.ToString(),
             IsDeleted = false
         };

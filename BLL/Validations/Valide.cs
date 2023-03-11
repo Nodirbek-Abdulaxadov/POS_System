@@ -1,5 +1,6 @@
 ﻿using BLL.Dtos.CustomerDtos;
 using BLL.Dtos.ProductDtos;
+using BLL.Dtos.WarehouseItemDtos;
 using DataLayer.Entities;
 using DataLayer.Entities.Selling;
 
@@ -53,5 +54,14 @@ public static class Valide
            && !dto.Size.IsNullOrEmpty()
            && !dto.Brand.IsNullOrEmpty()
            && !dto.Barcode.IsNullOrEmpty();
+
+    public static bool IsValid(this UpdateWarehouseItemDto dto)
+        => dto != null
+            && dto.Quantity > 0
+            && dto.IncomingPrice > 0
+            && dto.SellingPrice > 0
+            && dto.AdminId > 0
+            && dto.WarehouseId > 0
+            && dto.ProductId > 0;
 
 }

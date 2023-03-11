@@ -16,6 +16,7 @@
     <None Remove="assets\plus.png" />
     <None Remove="assets\receipt.png" />
     <None Remove="assets\refresh.png" />
+    <None Remove="assets\settings.png" />
     <None Remove="assets\trash.png" />
     <None Remove="assets\user.png" />
   </ItemGroup>
@@ -60,6 +61,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="assets\refresh.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="assets\settings.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="assets\trash.png">
