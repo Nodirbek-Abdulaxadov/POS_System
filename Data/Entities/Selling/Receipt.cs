@@ -19,7 +19,7 @@ public class Receipt : BaseEntity
     public bool HasLoan { get; set; }
 
     [Required]
-    public int SellerId { get; set; }
+    public string SellerId { get; set; } = string.Empty;
 
 
     public Loan Loan = new Loan();

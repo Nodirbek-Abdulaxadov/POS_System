@@ -1,5 +1,6 @@
 ﻿using BLL.Dtos.Identity;
 using System;
+using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 
 namespace Seller.App.Services;
@@ -42,6 +43,10 @@ public class TokenService : IDisposable
         StreamReader streamReader = new StreamReader(PHONE_NUMBER);
         return streamReader.ReadToEnd();
     }
+
+    //public string GetUserId()
+    //{   
+    //}
 
     private void Write(string path, string content)
     {

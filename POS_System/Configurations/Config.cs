@@ -50,6 +50,7 @@ namespace API.Configurations
             builder.Services.AddTransient<IWarehouseItemService, WarehouseItemService>();
             builder.Services.AddTransient<ICustomerService, CustomerService>();
             builder.Services.AddTransient<IUserService, UserService>();
+            builder.Services.AddTransient<IReceiptService, ReceiptService>();
 
             //Add dbContext
             builder.Services.AddDbContext<AppDbContext>(options =>
@@ -96,9 +97,7 @@ namespace API.Configurations
                 options.AddPolicy(
                   name: CORSOpenPolicy,
                   builder => {
-                      builder.WithOrigins("http://localhost:4200")
-                             .AllowCredentials()
-                             //.AllowAnyOrigin()
+                      builder.AllowAnyOrigin()
                              .AllowAnyMethod()
                              .AllowAnyHeader();
                   });
