@@ -1,4 +1,6 @@
-﻿using Seller.App.Services;
+﻿using Seller.App.Pages;
+using Seller.App.Services;
+using System.Threading;
 using System.Windows;
 using System.Windows.Media;
 
@@ -22,12 +24,15 @@ namespace Seller.App
             {
                 info.Foreground = Brushes.LightGreen;
                 info.Text = res.Item2;
+                Thread.Sleep(500);
+
+                Selling selling = new Selling();
+                this.Close();
+                selling.Show();
             }
             else
             {
                 info.Text = res.Item2;
-
-                MessageBox.Show(res.Item2);
             }
         }
     }

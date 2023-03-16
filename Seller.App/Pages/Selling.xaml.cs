@@ -34,7 +34,7 @@ namespace Seller.App.Pages
         }
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            productViews.AddRange(GetProductViews());
+            //productViews.AddRange(GetProductViews());
         }
 
         private void DispatcherTimer_Tick(object? sender, EventArgs e)
@@ -142,7 +142,7 @@ namespace Seller.App.Pages
         {
             vm.Transactions.Clear();
             total.Clear();
-            productViews.AddRange(GetProductViews());
+            //productViews.AddRange(GetProductViews());
         }
 
         private void print_Click(object sender, RoutedEventArgs e)
