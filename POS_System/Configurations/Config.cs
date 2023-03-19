@@ -97,9 +97,10 @@ namespace API.Configurations
                 options.AddPolicy(
                   name: CORSOpenPolicy,
                   builder => {
-                      builder.AllowAnyOrigin()
+                      builder.WithOrigins("https://pos-two-swart.vercel.app/")
                              .AllowAnyMethod()
-                             .AllowAnyHeader();
+                             .AllowAnyHeader()
+                             .AllowCredentials();
                   });
             });
         }
