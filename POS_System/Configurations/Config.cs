@@ -96,11 +96,12 @@ namespace API.Configurations
             {
                 options.AddPolicy(
                   name: CORSOpenPolicy,
-                  builder => {
+                  builder =>
+                  {
                       builder.WithOrigins("https://pos-two-swart.vercel.app/")
-                             .AllowAnyMethod()
-                             .AllowAnyHeader()
-                             .AllowCredentials();
+                      .AllowAnyOrigin()
+                      .AllowAnyMethod()
+                      .AllowAnyHeader();
                   });
             });
         }
@@ -112,12 +113,12 @@ namespace API.Configurations
 
             app.UseSwagger();
             app.UseSwaggerUI();
+            app.UseCors(CORSOpenPolicy);
 
             app.UseStaticFiles();
 
             app.UseRouting();
             app.UseHttpsRedirection();
-            app.UseCors(CORSOpenPolicy);
 
             app.UseAuthentication();
             app.UseAuthorization();
