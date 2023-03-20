@@ -1,5 +1,6 @@
 ﻿using BLL.Dtos.ProductDtos;
 using BLL.Dtos.TransactionDtos;
+using Seller.App.Components;
 using Seller.App.Services;
 using Seller.App.ViewModels;
 using System;
@@ -7,8 +8,14 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
+using ToastNotifications;
+using ToastNotifications.Lifetime;
+using ToastNotifications.Messages;
+using ToastNotifications.Position;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Seller.App.Pages
 {
@@ -18,23 +25,51 @@ namespace Seller.App.Pages
     public partial class Selling : Window
     {
         DispatcherTimer dispatcherTimer = new DispatcherTimer();
-        ProductAPIService product;
+        DispatcherTimer dispatcherTimer2 = new DispatcherTimer();
+
+        ProductAPIService? product;
         List<DProduct> productViews = new List<DProduct>();
         TransactionViewModel vm;
+        Notifier notifier;
+        bool networkFailed = false;
+        int activeTextboxIndex = 0;
 
         public Selling()
         {
             dispatcherTimer.Tick += DispatcherTimer_Tick;
             dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
             dispatcherTimer.Start();
+            dispatcherTimer2.Tick += DispatcherTimer_Tick2;
+            dispatcherTimer2.Interval = new TimeSpan(0, 0, 3);
+            //dispatcherTimer2.Start();
             InitializeComponent();
+            notifier = new Notifier(cfg =>
+            {
+                cfg.PositionProvider = new WindowPositionProvider(
+                    parentWindow: Application.Current.MainWindow,
+                    corner: Corner.TopLeft,
+                    offsetX: 10,
+                    offsetY: 10);
+
+                cfg.LifetimeSupervisor = new TimeAndCountBasedLifetimeSupervisor(
+                    notificationLifetime: TimeSpan.FromSeconds(3),
+                    maximumNotificationCount: MaximumNotificationCount.FromCount(3));
+
+                cfg.Dispatcher = Application.Current.Dispatcher;
+            });
 
             vm = new TransactionViewModel();
             transactions_table.ItemsSource = vm.Transactions;
         }
+
+        private void DispatcherTimer_Tick2(object? sender, EventArgs e)
+        {
+            CheckNetwork();
+        }
+
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            //productViews.AddRange(GetProductViews());
+            productViews.AddRange(GetProductViews());
         }
 
         private void DispatcherTimer_Tick(object? sender, EventArgs e)
@@ -66,7 +101,7 @@ namespace Seller.App.Pages
             }
         }
 
-        private List<DProduct> GetProductViews()
+        private List<DProduct>? GetProductViews()
         {
             product = new ProductAPIService();
             var result = product.GetProducts();
@@ -114,6 +149,10 @@ namespace Seller.App.Pages
                     }
                 }
             }
+            else
+            {
+                notifier.ShowWarning("Bu mahsulotdan boshqa qolmadi!");
+            }
             Refresh();
             return;
         }
@@ -142,12 +181,16 @@ namespace Seller.App.Pages
         {
             vm.Transactions.Clear();
             total.Clear();
-            //productViews.AddRange(GetProductViews());
+            naqd.Clear();
+            plastik.Clear();
+            chegirma.Clear();
+            barcode_input.Clear();
+            productViews.AddRange(GetProductViews());
         }
 
         private void print_Click(object sender, RoutedEventArgs e)
         {
-            if (vm.Transactions.Count > 1)
+            if (vm.Transactions.Count > 0)
             {
                 using PrintService printService = new PrintService();
                 printService.printerName = "XP-80";
@@ -157,8 +200,95 @@ namespace Seller.App.Pages
 
         private void setings_Click(object sender, RoutedEventArgs e)
         {
-            PrinterSetup printer = new PrinterSetup();
-            printer.ShowDialog();
+            Settings settings = new Settings();
+            Application.Current.MainWindow.Opacity = 0.5;
+            settings.ShowDialog();
+            Application.Current.MainWindow.Opacity = 1;
+        }
+
+        private void CheckNetwork()
+        {
+            start:
+            if (!NetworkService.IsConnected())
+            {
+                networkFailed = true;
+                var messageBox = new MaterialMessageBox("Internet connection failed!", MessageType.Error, MessageButtons.Retry);
+                var result = messageBox.ShowDialog();
+                if (result == true)
+                {
+                    goto start;
+                }
+            }
+            else if (networkFailed == true)
+            {
+                notifier.ShowSuccess("You are online!");
+                networkFailed = false;
+            }
+        }
+
+        private void numbers_Click(object sender, RoutedEventArgs e)
+        {
+            var button = (Button)sender;
+            WriteNumberToTextbox(button.Content.ToString());
+        }
+
+        private void WriteNumberToTextbox(string number)
+        {
+            switch (activeTextboxIndex)
+            {
+                case 1: 
+                    {
+                        naqd.Text += number;
+                    } break;
+                case 2:
+                    {
+                        plastik.Text += number;
+                    }
+                    break;
+                case 3:
+                    {
+                        chegirma.Text += number;
+                    }
+                    break;
+                case 4:
+                    {
+                        barcode_input.Text += number;
+                    }
+                    break;
+            }
+        }
+
+        private void tb_GotFocus(object sender, RoutedEventArgs e)
+        {
+            activeTextboxIndex = int.Parse(((TextBox)sender).Uid);
+        }
+
+        private void removetb_Click(object sender, RoutedEventArgs e)
+        {
+            switch (activeTextboxIndex)
+            {
+                case 1: CutText(ref naqd); break;
+                case 2: CutText(ref plastik); break;
+                case 3: CutText(ref chegirma); break;
+                case 4: CutText(ref barcode_input); break;
+            }
+        }
+
+        private void CutText(ref TextBox textbox)
+        {
+            if (textbox == null || textbox.Text.Length == 0) return;
+            if (textbox.Text.Length == 1)
+            {
+                textbox.Text = "";
+                return;
+            }
+
+            textbox.Text = textbox.Text.Substring(0, textbox.Text.Length - 1);
+        }
+
+        private void scanerlash_Click(object sender, RoutedEventArgs e)
+        {
+            barcode_input.Focus();
         }
     }
 }
