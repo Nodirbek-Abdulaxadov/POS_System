@@ -38,13 +38,13 @@ public static class Valide
 
     // product validation
     public static bool IsValid(this AddProductDto dto)
-        =>      dto != null
+        => dto != null
             && !dto.Name.IsNullOrEmpty()
             && !dto.Color.IsNullOrEmpty()
             && !dto.Size.IsNullOrEmpty()
             && !dto.Brand.IsNullOrEmpty()
             && !dto.Barcode.IsNullOrEmpty()
-            && dto.AdminId > 0;
+            && !string.IsNullOrEmpty(dto.AdminId);
 
     public static bool IsValid(this ProductUpdateDto dto)
        => dto != null
@@ -60,7 +60,7 @@ public static class Valide
             && dto.Quantity > 0
             && dto.IncomingPrice > 0
             && dto.SellingPrice > 0
-            && dto.AdminId > 0
+            && !string.IsNullOrEmpty(dto.AdminId)
             && dto.WarehouseId > 0
             && dto.ProductId > 0;
 

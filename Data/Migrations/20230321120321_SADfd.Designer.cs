@@ -3,6 +3,7 @@ using System;
 using DataLayer.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DataLayer.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230321120321_SADfd")]
+    partial class SADfd
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -161,9 +164,8 @@ namespace DataLayer.Migrations
                         .HasMaxLength(30)
                         .HasColumnType("character varying(30)");
 
-                    b.Property<string>("AdminId")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("AdminId")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Barcode")
                         .IsRequired()
@@ -285,9 +287,8 @@ namespace DataLayer.Migrations
                         .HasMaxLength(30)
                         .HasColumnType("character varying(30)");
 
-                    b.Property<string>("SellerId")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("SellerId")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
@@ -396,9 +397,8 @@ namespace DataLayer.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("AdminId")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("AdminId")
+                        .HasColumnType("integer");
 
                     b.Property<string>("BroughtDate")
                         .IsRequired()

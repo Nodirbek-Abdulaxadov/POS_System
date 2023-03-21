@@ -10,7 +10,7 @@ public class ProductViewDto : BaseDto
     public string Size { get; set; } = string.Empty;
     public string Barcode { get; set; } = string.Empty;
     public int WarningCount { get; set; } = 0;
-    public int AdminId { get; set; }
+    public string AdminId { get; set; } = string.Empty;
 
     public static explicit operator ProductViewDto(Product v)
         => new ProductViewDto()

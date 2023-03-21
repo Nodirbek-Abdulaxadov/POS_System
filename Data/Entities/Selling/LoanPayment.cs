@@ -12,5 +12,5 @@ public class LoanPayment : BaseEntity
 
 
     public int LoanId { get; set; }
-    public int SellerId { get; set; }
+    public string SellerId { get; set; } = string.Empty;
 }
