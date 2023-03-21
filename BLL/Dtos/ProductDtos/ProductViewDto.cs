@@ -21,7 +21,6 @@ public class ProductViewDto : BaseDto
             Color = v.Color,
             Size = v.Size,
             Barcode = v.Barcode,
-            IsDeleted = v.IsDeleted,
             WarningCount = v.WarningCount,
             AdminId = v.AdminId
         };

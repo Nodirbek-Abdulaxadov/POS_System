@@ -81,7 +81,7 @@ public class WarehouseItemService : IWarehouseItemService
             throw new MarketException("Page not fount!");
         }
 
-        return PagedList<WarehouseItemDto>.ToPagedList(dtoList, pageSize, pageNumber);
+        return pagedList.ToPagedList(dtoList, pageSize, pageNumber);
     }
 
     public async Task<WarehouseItemDto> Update(UpdateWarehouseItemDto dto)

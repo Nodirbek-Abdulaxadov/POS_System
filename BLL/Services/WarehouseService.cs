@@ -1,5 +1,4 @@
-﻿using BLL.Dtos.ProductDtos;
-using BLL.Dtos.WarehouseDtos;
+﻿using BLL.Dtos.WarehouseDtos;
 using BLL.Helpers;
 using BLL.Interfaces;
 using BLL.Validations;
@@ -74,7 +73,10 @@ public class WarehouseService : IWarehouseService
     /// <exception cref="ArgumentNullException"></exception>
     public async Task<PagedList<WarehouseViewDto>> GetWarehousesAsync(int pageSize, int pageNumber)
     {
-        var dtoList = await GetAllAsync();
+        var dtoList = (await _unitOfWork.Warehouses.GetAllAsync())
+                                                   .Where(w => w.IsDeleted == false)
+                                                   .Select(i => (WarehouseViewDto)i)
+                                                   .ToList();
 
         PagedList<WarehouseViewDto> pagedList = new (dtoList.ToList(),
                                                      dtoList.Count(),
@@ -85,7 +87,7 @@ public class WarehouseService : IWarehouseService
             throw new MarketException("Page not fount!");
         }
 
-        return PagedList<WarehouseViewDto>.ToPagedList(dtoList, pageSize, pageNumber);
+        return pagedList.ToPagedList(dtoList, pageSize, pageNumber);
     }
 
     /// <summary>
@@ -106,11 +108,13 @@ public class WarehouseService : IWarehouseService
     }
 
     /// <summary>
-    /// Remove warehouse model by id
+    /// 
     /// </summary>
     /// <param name="id"></param>
+    /// <param name="action"></param>
+    /// <returns></returns>
     /// <exception cref="ArgumentNullException"></exception>
-    public async Task RemoveAsync(int id)
+    public async Task ActionAsync(int id, ActionType action)
     {
         var model = await _unitOfWork.Warehouses.GetByIdAsync(id);
 
@@ -119,8 +123,27 @@ public class WarehouseService : IWarehouseService
             throw new ArgumentNullException(nameof(model));
         }
 
-        model.IsDeleted = true;
-        await _unitOfWork.Warehouses.UpdateAsync(model);
+        switch (action)
+        {
+            case ActionType.Archive:
+                {
+                    model.IsDeleted = true;
+
+                    await _unitOfWork.Warehouses.UpdateAsync(model);
+                } break;
+            case ActionType.Recover:
+                {
+                    model.IsDeleted = false;
+                    await _unitOfWork.Warehouses.UpdateAsync(model);
+                }
+                break;
+            case ActionType.Remove:
+                {
+                    await _unitOfWork.Warehouses.RemoveAsync(model);
+                }
+                break;
+        }
+
         await _unitOfWork.SaveAsync();
     }
 
@@ -155,5 +178,24 @@ public class WarehouseService : IWarehouseService
 
         var res = await GetByIdAsync(dto.Id);
         return res;
+    }
+
+    public async Task<PagedList<WarehouseViewDto>> GetArchivedWarehousesAsync(int pageSize, int pageNumber)
+    {
+        var dtoList = (await _unitOfWork.Warehouses.GetAllAsync())
+                                                   .Where(w => w.IsDeleted == true)
+                                                   .Select(i => (WarehouseViewDto)i)
+                                                   .ToList();
+
+        PagedList<WarehouseViewDto> pagedList = new(dtoList.ToList(),
+                                                     dtoList.Count(),
+                                                     pageSize, pageNumber);
+
+        if (pageNumber > pagedList.TotalPages || pageNumber < 1)
+        {
+            throw new MarketException("Page not fount!");
+        }
+
+        return pagedList.ToPagedList(dtoList, pageSize, pageNumber);
     }
 }

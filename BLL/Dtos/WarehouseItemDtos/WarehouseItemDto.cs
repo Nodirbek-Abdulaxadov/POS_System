@@ -22,7 +22,6 @@ public class WarehouseItemDto : BaseDto
             AdminId = v.AdminId,
             WarehouseId = v.WarehouseId,
             BroughtDate = v.BroughtDate,
-            IncomingPrice = v.IncomingPrice,
-            IsDeleted = v.IsDeleted,
+            IncomingPrice = v.IncomingPrice
         };
 }

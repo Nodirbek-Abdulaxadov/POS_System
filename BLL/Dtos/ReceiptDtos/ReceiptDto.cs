@@ -25,7 +25,6 @@ public class ReceiptDto : BaseDto
             PaidCard = v.PaidCard,
             HasLoan = v.HasLoan,
             Id = v.Id,
-            IsDeleted = v.IsDeleted,
             Loan = v.Loan,
             SellerId = v.SellerId,
             Transactions = v.Transactions.ToList()
@@ -41,7 +40,6 @@ public class ReceiptDto : BaseDto
             PaidCard = v.PaidCard,
             HasLoan = v.HasLoan,
             Id = v.Id,
-            IsDeleted = v.IsDeleted,
             Loan = v.Loan,
             SellerId = v.SellerId,
             Transactions = v.Transactions.ToList()

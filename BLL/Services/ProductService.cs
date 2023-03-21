@@ -119,7 +119,7 @@ public class ProductService : IProductService
             throw new MarketException("Page not fount!");
         }
 
-        return PagedList<ProductViewDto>.ToPagedList(list, pageSize, pageNumber);
+        return pagedList.ToPagedList(list, pageSize, pageNumber);
     }
 
     /// <summary>

@@ -56,7 +56,7 @@ namespace DataLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("RefreshTokens");
+                    b.ToTable("RefreshTokens", (string)null);
                 });
 
             modelBuilder.Entity("Core.User", b =>
@@ -145,7 +145,7 @@ namespace DataLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("DataLayer.Entities.Product", b =>
@@ -201,7 +201,7 @@ namespace DataLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
                 });
 
             modelBuilder.Entity("DataLayer.Entities.Selling.Customer", b =>
@@ -227,7 +227,7 @@ namespace DataLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Customers");
+                    b.ToTable("Customers", (string)null);
                 });
 
             modelBuilder.Entity("DataLayer.Entities.Selling.Loan", b =>
@@ -260,7 +260,7 @@ namespace DataLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Loans");
+                    b.ToTable("Loans", (string)null);
                 });
 
             modelBuilder.Entity("DataLayer.Entities.Selling.LoanPayment", b =>
@@ -291,7 +291,7 @@ namespace DataLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("LoanPayments");
+                    b.ToTable("LoanPayments", (string)null);
                 });
 
             modelBuilder.Entity("DataLayer.Entities.Selling.Receipt", b =>
@@ -331,7 +331,7 @@ namespace DataLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Receipts");
+                    b.ToTable("Receipts", (string)null);
                 });
 
             modelBuilder.Entity("DataLayer.Entities.Selling.Transaction", b =>
@@ -359,7 +359,7 @@ namespace DataLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Transactions");
+                    b.ToTable("Transactions", (string)null);
                 });
 
             modelBuilder.Entity("DataLayer.Entities.Warehouse", b =>
@@ -385,7 +385,7 @@ namespace DataLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Warehouses");
+                    b.ToTable("Warehouses", (string)null);
                 });
 
             modelBuilder.Entity("DataLayer.Entities.WarehouseItem", b =>
@@ -425,7 +425,7 @@ namespace DataLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("WarehousesItems");
+                    b.ToTable("WarehousesItems", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
