@@ -16,6 +16,40 @@ public class ProductService : IProductService
         _unitOfWork = unitOfWork;
     }
 
+    public async Task ActionAsync(int id, ActionType action)
+    {
+        var model = await _unitOfWork.Products.GetByIdAsync(id);
+
+        if (model == null)
+        {
+            throw new ArgumentNullException(nameof(model));
+        }
+
+        switch (action)
+        {
+            case ActionType.Archive:
+                {
+                    model.IsDeleted = true;
+
+                    await _unitOfWork.Products.UpdateAsync(model);
+                }
+                break;
+            case ActionType.Recover:
+                {
+                    model.IsDeleted = false;
+                    await _unitOfWork.Products.UpdateAsync(model);
+                }
+                break;
+            case ActionType.Remove:
+                {
+                    await _unitOfWork.Products.RemoveAsync(model);
+                }
+                break;
+        }
+
+        await _unitOfWork.SaveAsync();
+    }
+
     /// <summary>
     /// Add new product method
     /// </summary>
@@ -50,9 +84,34 @@ public class ProductService : IProductService
     /// <returns>List of products</returns>
     public async Task<IEnumerable<ProductViewDto>> GetAllAsync()
     {
-        var products = await _unitOfWork.Products.GetAllAsync();
-        return products.Where(x => x.IsDeleted == false)
-                       .Select(p => (ProductViewDto)p);
+        var list = await _unitOfWork.Products.GetAllAsync();
+
+        if (list == null)
+        {
+            throw new ArgumentNullException(nameof(list));
+        }
+
+        var dtoList = list.Select(x => (ProductViewDto)x);
+        return dtoList;
+    }
+
+    public async Task<PagedList<ProductViewDto>> GetArchivedProductsAsync(int pageSize, int pageNumber)
+    {
+        var dtoList = (await _unitOfWork.Products.GetAllAsync())
+                                                   .Where(w => w.IsDeleted == true)
+                                                   .Select(i => (ProductViewDto)i)
+                                                   .ToList();
+
+        PagedList<ProductViewDto> pagedList = new(dtoList.ToList(),
+                                                     dtoList.Count(),
+                                                     pageSize, pageNumber);
+
+        if (pageNumber > pagedList.TotalPages || pageNumber < 1)
+        {
+            throw new MarketException("Page not fount!");
+        }
+
+        return pagedList.ToPagedList(dtoList, pageSize, pageNumber);
     }
 
     /// <summary>
@@ -108,18 +167,21 @@ public class ProductService : IProductService
     /// <returns>Paged list</returns>
     public async Task<PagedList<ProductViewDto>> GetProductsAsync(int pageSize, int pageNumber)
     {
-        var list = await GetAllAsync();
+        var dtoList = (await _unitOfWork.Products.GetAllAsync())
+                                                   .Where(w => w.IsDeleted == false)
+                                                   .Select(i => (ProductViewDto)i)
+                                                   .ToList();
 
-        PagedList<ProductViewDto> pagedList = new ( list.ToList(), 
-                                                    list.Count(), 
-                                                    pageSize, pageNumber);
+        PagedList<ProductViewDto> pagedList = new(dtoList.ToList(),
+                                                     dtoList.Count(),
+                                                     pageSize, pageNumber);
 
         if (pageNumber > pagedList.TotalPages || pageNumber < 1)
         {
             throw new MarketException("Page not fount!");
         }
 
-        return pagedList.ToPagedList(list, pageSize, pageNumber);
+        return pagedList.ToPagedList(dtoList, pageSize, pageNumber);
     }
 
     /// <summary>

@@ -1,8 +1,10 @@
 ﻿using BLL.Dtos.ProductDtos;
+using BLL.Helpers;
 using BLL.Interfaces;
 using BLL.Validations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace API.Controllers
 {
@@ -31,6 +33,7 @@ namespace API.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+
         [HttpGet("d")]
         public async Task<ActionResult<IEnumerable<ProductViewDto>>> DGet()
         {
@@ -51,7 +54,35 @@ namespace API.Controllers
             try
             {
                 var list = await _productService.GetProductsAsync(pageSize, pageNumber);
-                return Ok(list);
+                var json = JsonConvert.SerializeObject(list, Formatting.Indented,
+                new JsonSerializerSettings
+                {
+                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                });
+                return Ok(json);
+            }
+            catch (MarketException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("archived/paged")]
+        public async Task<ActionResult<IEnumerable<ProductViewDto>>> GetArchived(int pageSize, int pageNumber)
+        {
+            try
+            {
+                var list = await _productService.GetArchivedProductsAsync(pageSize, pageNumber);
+                var json = JsonConvert.SerializeObject(list, Formatting.Indented,
+                new JsonSerializerSettings
+                {
+                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                });
+                return Ok(json);
             }
             catch (MarketException ex)
             {
@@ -127,7 +158,45 @@ namespace API.Controllers
             try
             {
                 var model = await _productService.GetByIdAsync(id);
-                await _productService.RemoveAsync(id);
+                await _productService.ActionAsync(id, ActionType.Remove);
+                return NoContent();
+            }
+            catch (ArgumentNullException)
+            {
+                return NotFound();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut("archive/{id}")]
+        public async Task<IActionResult> Archive(int id)
+        {
+            try
+            {
+                var model = await _productService.GetByIdAsync(id);
+                await _productService.ActionAsync(id, ActionType.Archive);
+                return NoContent();
+            }
+            catch (ArgumentNullException)
+            {
+                return NotFound();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut("recover/{id}")]
+        public async Task<IActionResult> Recover(int id)
+        {
+            try
+            {
+                var model = await _productService.GetByIdAsync(id);
+                await _productService.ActionAsync(id, ActionType.Recover);
                 return NoContent();
             }
             catch (ArgumentNullException)
