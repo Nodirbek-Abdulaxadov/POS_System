@@ -267,9 +267,9 @@
                 </StackPanel>
 
                 <Grid Height="597"
-                      Margin="10,15,10,0">
+                      Margin="10,10,10,0">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="0"/>
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="*"/>
@@ -278,7 +278,7 @@
                         <RowDefinition Height="1.2*"/>
                     </Grid.RowDefinitions>
 
-                    <Grid Grid.Row="0">
+                    <Grid Grid.Row="0" Visibility="Collapsed">
                         <materialDesign:Card Margin="5,10">
                             <TextBox Padding="10,2"
                                      FontSize="40"
@@ -473,7 +473,13 @@
                     </Grid>
                 </Grid>
 
-                <materialDesign:Card Margin="20,0,20,0" Padding="10">
+            </StackPanel>
+            
+            <materialDesign:Card HorizontalAlignment="Right"
+                    VerticalAlignment="Bottom"
+                    Width="360"
+                    Margin="5,0,15,10"
+                    Background="White">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                         <StackPanel Margin="10,0" Orientation="Vertical">
                             <TextBlock Text="14:13"
@@ -489,7 +495,6 @@
                         </StackPanel>
                     </StackPanel>
                 </materialDesign:Card>
-            </StackPanel>
         </Grid>
     </Grid>
 </Window>
