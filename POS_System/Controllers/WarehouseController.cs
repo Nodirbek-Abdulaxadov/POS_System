@@ -11,7 +11,7 @@ namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class WarehouseController : ControllerBase
     {
         private readonly IWarehouseService _itemService;
@@ -59,7 +59,7 @@ namespace API.Controllers
         }
 
         [HttpGet("archived/paged")]
-        public async Task<ActionResult<IEnumerable<WarehouseItemDto>>> GetArchved(int pageSize, int pageNumber)
+        public async Task<ActionResult<IEnumerable<WarehouseItemDto>>> GetArchived(int pageSize, int pageNumber)
         {
             try
             {

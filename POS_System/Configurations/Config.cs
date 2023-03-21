@@ -43,6 +43,7 @@ namespace API.Configurations
             builder.Services.AddTransient<ITransactionInterface, TransactionRepository>();
             builder.Services.AddTransient<IWarehouseInterface, WarehouseRepository>();
             builder.Services.AddTransient<IWarehouseItemInterface, WarehouseItemRepository>();
+            builder.Services.AddTransient<ICategoryInterface, CategoryRepository>();
             builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
 
             builder.Services.AddTransient<IWarehouseService, WarehouseService>();
@@ -51,6 +52,7 @@ namespace API.Configurations
             builder.Services.AddTransient<ICustomerService, CustomerService>();
             builder.Services.AddTransient<IUserService, UserService>();
             builder.Services.AddTransient<IReceiptService, ReceiptService>();
+            builder.Services.AddTransient<ICategoryService, CategoryService>();
 
             //Add dbContext
             builder.Services.AddDbContext<AppDbContext>(options =>
