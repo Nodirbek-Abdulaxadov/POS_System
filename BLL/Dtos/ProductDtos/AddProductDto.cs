@@ -11,7 +11,7 @@ public class AddProductDto
     public string Barcode { get; set; } = string.Empty;
     public int WarningCount { get; set; }
 
-    public int AdminId { get; set; }
+    public string AdminId { get; set; } = string.Empty;
 
     public static explicit operator Product(AddProductDto v)
         => new Product()

@@ -1,6 +1,6 @@
 ﻿namespace BLL.Helpers;
 
-public class PagedList<T> : List<T>
+public class PagedList<T>
 {
     public int CurrentPage { get; private set; }
     public int TotalPages { get; private set; }
@@ -9,6 +9,7 @@ public class PagedList<T> : List<T>
 
     public bool HasPrevious => CurrentPage > 1;
     public bool HasNext => CurrentPage < TotalPages;
+    public List<T> Data { get; set; }
 
     public PagedList(List<T> items, int count, int pageNumber, int pageSize)
     {
@@ -17,13 +18,14 @@ public class PagedList<T> : List<T>
         CurrentPage = pageNumber;
         TotalPages = (int)Math.Ceiling(count / (double)pageSize);
 
-        AddRange(items);
+        Data = new List<T>(items);
     }
 
-    public static PagedList<T> ToPagedList(IEnumerable<T> source, int pageSize, int pageNumber)
+    public PagedList<T> ToPagedList(IEnumerable<T> source, int pageSize, int pageNumber)
     {
         var count = source.Count();
         var items = source.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+        Data = items;
 
         return new PagedList<T>(items, count, pageNumber, pageSize);
     }

@@ -10,6 +10,6 @@ public interface IUnitOfWork : IDisposable
     ITransactionInterface Transactions { get; }
     IWarehouseInterface Warehouses { get; }
     IWarehouseItemInterface WarehouseItems { get; }
-
+    ICategoryInterface Categories { get; }
     Task SaveAsync();
 }

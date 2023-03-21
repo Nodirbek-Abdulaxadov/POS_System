@@ -12,7 +12,6 @@ public class WarehouseViewDto : BaseDto
         {
             Id = v.Id,
             Name = v.Name,
-            CreatedDate = v.CreatedDate,
-            IsDeleted = v.IsDeleted,
+            CreatedDate = v.CreatedDate
         };
 }

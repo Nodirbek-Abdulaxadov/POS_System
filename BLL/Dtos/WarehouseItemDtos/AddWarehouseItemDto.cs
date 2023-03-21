@@ -18,7 +18,7 @@ public class AddWarehouseItemDto
     [Required]
     public int ProductId { get; set; }
     [Required]
-    public int AdminId { get; set; }
+    public string AdminId { get; set; } = string.Empty;
     [Required]
     public int WarehouseId { get; set; }
 

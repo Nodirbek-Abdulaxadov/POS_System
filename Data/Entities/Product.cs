@@ -17,7 +17,10 @@ public class Product : BaseEntity
     [StringLength(50)]
     public string Barcode { get; set; } = string.Empty;
 
-    public int AdminId { get; set; }
+    [Required]
+    public int CategoryId { get; set; }
+
+    public string AdminId { get; set; } = string.Empty;
     [StringLength(30)]
     public string AddedDate { get; set; } = string.Empty;
 

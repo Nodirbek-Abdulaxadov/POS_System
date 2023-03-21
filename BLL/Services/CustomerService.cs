@@ -75,7 +75,7 @@ public class CustomerService : ICustomerService
             throw new MarketException("Page not fount!");
         }
 
-        return PagedList<CustomerViewDto>.ToPagedList(dtoList, pageSize, pageNumber);
+        return pagedList.ToPagedList(dtoList, pageSize, pageNumber);
     }
 
     public async Task RemoveAsync(int id)

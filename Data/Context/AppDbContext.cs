@@ -12,6 +12,7 @@ public class AppDbContext : IdentityDbContext<User>
 		: base(options) { }
 
 	public DbSet<Warehouse> Warehouses { get; set; }
+	public DbSet<Category> Categories { get; set; }
 	public DbSet<Product> Products { get; set; }
 	public DbSet<WarehouseItem> WarehousesItems { get; set; }
 	public DbSet<Customer> Customers { get; set; }

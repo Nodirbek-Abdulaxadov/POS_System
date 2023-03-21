@@ -198,7 +198,8 @@ public class UserService : IUserService
             throw new MarketException("User not found!");
         }
 
-        return await _userManager.IsInRoleAsync(user, role);
+        var result = await _userManager.IsInRoleAsync(user, role);
+        return result;
     }
 
     private async Task<User?> FindUserByPhoneNumberAsync(string phoneNumber)
