@@ -1,48 +1,36 @@
-﻿using Seller.App.Services;
+﻿using Seller.App.Components;
+using Seller.App.Services;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace Seller.App.Pages
 {
     /// <summary>
-    /// Interaction logic for PrinterSetup.xaml
+    /// Interaction logic for PrinterSettings.xaml
     /// </summary>
-    public partial class PrinterSetup : Window
+    public partial class PrinterSettings : Page
     {
         PrintService service = new PrintService();
-        public PrinterSetup()
+        public PrinterSettings()
         {
             InitializeComponent();
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
+        private void Page_Loaded(object sender, RoutedEventArgs e)
         {
             connected.Text = service.GetSavedPrinterName();
-            printers.ItemsSource = service.ConnectedPrinters();
-            printers.SelectedIndex = 0;
-        }
-
-        private void back_Click(object sender, RoutedEventArgs e)
-        {
-            this.Close();
+            var list = service.ConnectedPrinters();
+            printers.ItemsSource = list;
+            printers.SelectedIndex = list.FindIndex(p => p == connected.Text);
         }
 
         private void save_Click(object sender, RoutedEventArgs e)
         {
             string selected = printers.SelectedItem.ToString();
             service.SavePrinter(selected);
-            this.Close();
+            connected.Text = selected;
         }
 
         private void test_Click(object sender, RoutedEventArgs e)
@@ -55,7 +43,8 @@ namespace Seller.App.Pages
             }
             catch (Exception)
             {
-                MessageBox.Show("Tanlangan printer ishlamadi🤷‍♂");
+                var messageBox = new MaterialMessageBox("Tanlangan printer ishlamadi🤦‍♂️!", MessageType.Error, MessageButtons.Ok);
+                messageBox.ShowDialog();
             }
         }
     }

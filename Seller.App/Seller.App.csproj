@@ -8,17 +8,60 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="assets\barcode.png" />
+    <None Remove="assets\close.png" />
+    <None Remove="assets\debt.png" />
     <None Remove="assets\left.png" />
+    <None Remove="assets\loader.gif" />
     <None Remove="assets\login.png" />
     <None Remove="assets\login_bg.jpg" />
     <None Remove="assets\logout.png" />
+    <None Remove="assets\logout_left.png" />
     <None Remove="assets\minus.png" />
     <None Remove="assets\plus.png" />
+    <None Remove="assets\printer.png" />
+    <None Remove="assets\rbox.png" />
     <None Remove="assets\receipt.png" />
     <None Remove="assets\refresh.png" />
+    <None Remove="assets\search.png" />
     <None Remove="assets\settings.png" />
+    <None Remove="assets\translate.png" />
     <None Remove="assets\trash.png" />
     <None Remove="assets\user.png" />
+    <None Remove="assets\xclose.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="assets\barcode.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="assets\debt.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="assets\loader.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="assets\logout_left.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="assets\printer.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="assets\rbox.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="assets\search.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="assets\translate.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="assets\close.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
   <ItemGroup>
@@ -26,6 +69,8 @@
     <PackageReference Include="MaterialDesignThemes" Version="4.7.1" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
     <PackageReference Include="System.Drawing.Common" Version="7.0.0" />
+    <PackageReference Include="ToastNotifications" Version="2.5.1" />
+    <PackageReference Include="ToastNotifications.Messages" Version="2.5.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -72,6 +117,24 @@
     <Resource Include="assets\user.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="assets\xclose.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Settings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
 
 </Project>
