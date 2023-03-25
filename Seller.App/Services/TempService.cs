@@ -1,12 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
 
-namespace Seller.App.Services
+namespace Seller.App.Services;
+
+public class TempService : IDisposable
 {
-    internal class TempService
+    private readonly string RECEIPT = Path.Combine(Path.GetTempPath(), "40c76fb3-3e93-4ad1-b592-f53c83c0bd40.txt");
+
+    public void SaveReceipt()
     {
+
     }
+
+    public void Dispose()
+            => GC.SuppressFinalize(this);
 }
