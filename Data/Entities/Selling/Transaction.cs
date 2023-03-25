@@ -9,7 +9,7 @@ public class Transaction : BaseEntity
     [Required]
     public decimal TotalPrice { get; set; }
     [Required]
-    public int OrderId { get; set; }
+    public int ReceiptId { get; set; }
     [Required]
     public int ProductId { get; set; }
 }

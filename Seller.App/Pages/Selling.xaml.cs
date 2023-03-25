@@ -1,6 +1,9 @@
 ﻿using BLL.Dtos.ProductDtos;
 using BLL.Dtos.TransactionDtos;
+using DataLayer.Entities.Selling;
+using MaterialDesignThemes.Wpf;
 using Seller.App.Components;
+using Seller.App.Models;
 using Seller.App.Services;
 using Seller.App.ViewModels;
 using System;
@@ -8,6 +11,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -117,10 +121,6 @@ namespace Seller.App.Pages
 
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
-            //if (e.Key == Key.D4)
-            //{
-            //    barcode_input.Focus();
-            //}
             if (e.Key == Key.Enter)
             {
                 var tr = productViews.FirstOrDefault(i => i.Barcode == barcode_input.Text);
@@ -205,7 +205,7 @@ namespace Seller.App.Pages
                 }
                 if (totalPrice > 0)
                 {
-                    total.Text = ConvertToMoneyFormat(totalPrice.ToString());
+                    total.Text = totalPrice.ToString().ToMoneyFormat();
                 }
                 else
                 {
@@ -229,22 +229,59 @@ namespace Seller.App.Pages
         {
             if (vm.Transactions.Count > 0)
             {
-                using var selling = new SellingService();
-                var receipt = selling.CreateEmptyReceipt();
-                receipt.SellerId = "Some guid";
-                receipt.Discount = decimal.Parse(chegirma.Text.Replace(" ", "")); ;
-                receipt.PaidCard = decimal.Parse(plastik.Text.Replace(" ", ""));
-                receipt.PaidCash = decimal.Parse(naqd.Text.Replace(" ", ""));
-                //receipt.Transactions = vm.Transactions.ToList();
-
-                using PrintService printService = new PrintService();
-                printService.printerName = "XP-80";
-                printService.Print(receipt);
+                CheckNetwork();
+                Thread t = new Thread(SaveReceipt);
+                t.SetApartmentState(ApartmentState.STA);
+                t.IsBackground = true;
+                t.Start();
             }
             else
             {
                 notifier.ShowWarning("Mahsulot qo'shing!");
             }
+        }
+        private async void SaveReceipt()
+        {
+            await Application.Current.Dispatcher.BeginInvoke(
+                  DispatcherPriority.Background,
+                  new Action(async () => {
+                      var naqdda = decimal.Parse(naqd.Text.Replace(" ", ""));
+                var plastikda = decimal.Parse(plastik.Text.Replace(" ", ""));
+                var jami = decimal.Parse(total.Text.Replace(" ", ""));
+                if (jami == naqdda + plastikda)
+                {
+                    using var selling = new SellingService();
+                    var receipt = selling.CreateEmptyReceipt();
+                    receipt.SellerId = "Some guid";
+                    receipt.Discount = decimal.Parse(chegirma.Text.Replace(" ", ""));
+                    receipt.PaidCard = decimal.Parse(plastik.Text.Replace(" ", ""));
+                    receipt.PaidCash = decimal.Parse(naqd.Text.Replace(" ", ""));
+                    receipt.CreatedDate = DateTime.Now.ToString();
+                    receipt.TotalPrice = jami;
+                    receipt.HasLoan = false;
+                    receipt.Transactions.AddRange(vm.Transactions.ToList());
+
+                    try
+                    {
+                        var result = await selling.AddAsync(receipt);
+                        if (result != null)
+                        {
+                            using var printService = new PrintService();
+                            printService.printerName = "XP-80";
+                            printService.Print(receipt, vm.Transactions.ToList(), 123);
+                                      notifier.ShowSuccess("Ma'lumotlar saqlandi!");
+                        }
+                        else
+                        {
+                            notifier.ShowError("Something went wrong!");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        notifier.ShowError(ex.Message);
+                    }
+                    }
+                }));
         }
 
         private void setings_Click(object sender, RoutedEventArgs e)
@@ -302,20 +339,20 @@ namespace Seller.App.Pages
                     {
                         if (naqd.Text == "0") naqd.Clear();
                         naqd.Text += number;
-                        naqd.Text = ConvertToMoneyFormat(naqd.Text);
+                        naqd.Text = naqd.Text.ToMoneyFormat();
                     } break;
                 case 2:
                     {
                         if (plastik.Text == "0") plastik.Clear();
                         plastik.Text += number;
-                        plastik.Text = ConvertToMoneyFormat(plastik.Text);
+                        plastik.Text = plastik.Text.ToMoneyFormat();
                     }
                     break;
                 case 3:
                     {
                         if (chegirma.Text == "0") chegirma.Clear();
                         chegirma.Text += number;
-                        chegirma.Text = ConvertToMoneyFormat(chegirma.Text);
+                        chegirma.Text = chegirma.Text.ToMoneyFormat();
                     }
                     break;
                 case 4:
@@ -325,35 +362,6 @@ namespace Seller.App.Pages
                     break;
             }
             SetTotalPrice();
-        }
-
-        private string ConvertToMoneyFormat(string text)
-        {
-            if (text.Length < 3 || string.IsNullOrEmpty(text)) return text;
-
-            text = Reverse(text.Replace(" ", ""));
-            string result = string.Empty;
-            for (int i = 0; i < text.Length; i ++)
-            {
-                result += text[i];
-                if ((i+1) % 3 == 0)
-                {
-                    result += " ";
-                }
-            }
-
-            return Reverse(result).Trim();
-        }
-
-        private string Reverse(string text)
-        {
-            string reversed = string.Empty;
-            foreach (char c in text.Reverse())
-            {
-                reversed += c;
-            }
-
-            return reversed;
         }
 
         private void tb_GotFocus(object sender, RoutedEventArgs e)
@@ -396,17 +404,17 @@ namespace Seller.App.Pages
             {
                 case 1:
                     {
-                        naqd.Text = ConvertToMoneyFormat(naqd.Text);
+                        naqd.Text = naqd.Text.ToMoneyFormat();
                     }
                     break;
                 case 2:
                     {
-                        plastik.Text = ConvertToMoneyFormat(plastik.Text);
+                        plastik.Text = plastik.Text.ToMoneyFormat();
                     }
                     break;
                 case 3:
                     {
-                        chegirma.Text = ConvertToMoneyFormat(chegirma.Text);
+                        chegirma.Text = chegirma.Text.ToMoneyFormat();
                     }
                     break;
                 case 4:

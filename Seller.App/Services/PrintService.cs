@@ -1,4 +1,5 @@
 ﻿using BLL.Dtos.ReceiptDtos;
+using BLL.Dtos.TransactionDtos;
 using ESC_POS_USB_NET.Printer;
 using System;
 using System.Collections.Generic;
@@ -16,17 +17,17 @@ public class PrintService : IDisposable
     Printer? printer;
     public PrintService()
 	{
-        printerName = GetSavedPrinterName();
+        //printerName = GetSavedPrinterName();
     }
 
-	public void Print(ReceiptDto receipt)
+	public void Print(AddReceiptDto receipt, List<TransactionDto> transactions, int receiptId)
 	{
         using var tokenService = new TokenService();
 		printer = new Printer(printerName, "UTF-8");
-        Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+        Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
         printer.Separator();
-        Bitmap image = new Bitmap(Bitmap.FromFile("logo.png"));
-        printer.Image(image);
+        //Bitmap image = new Bitmap(Bitmap.FromFile("logo.png"));
+        //printer.Image(image);
         printer.AlignCenter();
         printer.DoubleWidth2();
         printer.Append("\"MDevs Group LLC\"");
@@ -40,26 +41,26 @@ public class PrintService : IDisposable
         int tr = 1;
         decimal sum = 0;
         printer.Append("\n");
-        foreach (var item in receipt.Transactions)
+        foreach (var item in transactions)
         {
-            //string text = $"{tr}.  {item.Name}";
-            //int strLength = 32 - text.Length;
-            //for (int i = 1; i <= strLength; i++)
-            //{
-            //    text += " ";
-            //}
-            //string temp = $"{item.Quantity}*{item.Price}";
-            //text += temp;
-            //strLength = 16 - temp.Length;
-            //for (int i = 0; i < strLength; i++)
-            //{
-            //    text += " ";
-            //}
-            //text += item.TotalPrice.ToString();
-            //printer.CondensedMode(text);
-            //printer.Append("\n");
-            //tr++;
-            //sum += item.TotalPrice;
+            string text = $"{tr}.  {item.Name}";
+            int strLength = 32 - text.Length;
+            for (int i = 1; i <= strLength; i++)
+            {
+                text += " ";
+            }
+            string temp = $"{item.Quantity}*{item.Price}";
+            text += temp;
+            strLength = 16 - temp.Length;
+            for (int i = 0; i < strLength; i++)
+            {
+                text += " ";
+            }
+            text += item.TotalPrice.ToString();
+            printer.CondensedMode(text);
+            printer.Append("\n");
+            tr++;
+            sum += item.TotalPrice;
         }
 
         printer.Separator();
@@ -81,7 +82,7 @@ public class PrintService : IDisposable
         printer.Append("Sana:                      " + DateTime.Now.ToString());
 
 
-        string barcode = (100000000000 + receipt.Id).ToString();
+        string barcode = (100000000000 + receiptId).ToString();
 
 
         printer.Append("\n");

@@ -1,7 +1,9 @@
 ﻿using BLL.Dtos.ReceiptDtos;
+using BLL.Dtos.TransactionDtos;
 using BLL.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace API.Controllers
 {
@@ -16,26 +18,14 @@ namespace API.Controllers
             _receiptService = receiptService;
         }
 
-        [HttpGet("{sellerId}")]
-        public async Task<ActionResult<ReceiptDto>> Get(string sellerId)
+        [HttpPost]
+        public async Task<ActionResult<ReceiptDto>> Put([FromQuery] AddReceiptDto dto, 
+            [FromBody] List<TransactionDto> transactions)
         {
             try
             {
-                var model = await _receiptService.CreateAsync(sellerId);
-                return Ok(model);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-        [HttpPut]
-        public async Task<ActionResult<ReceiptDto>> Put(ReceiptDto dto)
-        {
-            try
-            {
-                var model = await _receiptService.SaveAsync(dto);
+                dto.Transactions = transactions;
+                var model = await _receiptService.AddAsync(dto);
                 return Ok(model);
             }
             catch (Exception ex)

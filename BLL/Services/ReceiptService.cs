@@ -14,32 +14,30 @@ public class ReceiptService : IReceiptService
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<ReceiptDto> CreateAsync(string sellerId)
+
+    public async Task<ReceiptDto> AddAsync(AddReceiptDto receiptDto)
     {
-        var receipt = new Receipt()
+        var receipt = await _unitOfWork.Receipts.AddAsync((Receipt)receiptDto);
+        await _unitOfWork.SaveAsync();
+
+        foreach (var item in receiptDto.Transactions)
         {
-            CreatedDate = "",
-            SellerId = sellerId,
-            Discount = 0,
-            HasLoan = false,
-            IsDeleted = false,
-            PaidCard = 0,
-            PaidCash = 0,
-            TotalPrice = 0,
-            Loan = new Loan(),
-            Transactions = new List<Transaction>()
-        };
+            var transaction = await _unitOfWork.Transactions.AddAsync((Transaction)item);
+            await _unitOfWork.SaveAsync();
+            transaction.ReceiptId = receipt.Id;
+            transaction.ProductId = (await _unitOfWork.Products.GetAllAsync())
+                                           .FirstOrDefault(p => p.Barcode == item.Barcode)
+                                           .Id;
+            await _unitOfWork.Transactions.UpdateAsync(transaction);
+            await _unitOfWork.SaveAsync();
 
-        var model = await _unitOfWork.Receipts.AddAsync(receipt);
-        await _unitOfWork.SaveAsync();
+            var warehouseItem = (await _unitOfWork.WarehouseItems.GetAllAsync())
+                                .FirstOrDefault(i => i.ProductId == transaction.ProductId);
+            warehouseItem.Quantity -= item.Quantity;
+            await _unitOfWork.WarehouseItems.UpdateAsync(warehouseItem);
+            await _unitOfWork.SaveAsync();
+        }
+
         return (ReceiptDto)receipt;
-    }
-
-    public async Task<ReceiptDto> SaveAsync(ReceiptDto receiptDto)
-    {
-        await _unitOfWork.Receipts.UpdateAsync((Receipt)receiptDto);
-        await _unitOfWork.SaveAsync();
-
-        return receiptDto;
     }
 }
