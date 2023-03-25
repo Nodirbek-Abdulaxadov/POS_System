@@ -2,8 +2,11 @@
 using Seller.App.Pages;
 using Seller.App.Services;
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
+using System.Windows.Threading;
 using ToastNotifications;
 using ToastNotifications.Lifetime;
 using ToastNotifications.Messages;
@@ -16,12 +19,14 @@ namespace Seller.App
     /// </summary>
     public partial class MainWindow : Window
     {
+        Selling? selling;
         Notifier? notifier = null;
         private bool networkFailed = false;
 
         public MainWindow()
         {
             InitializeComponent();
+            selling = new Selling();
             notifier = new Notifier(cfg =>
             {
                 cfg.PositionProvider = new WindowPositionProvider(
@@ -59,9 +64,9 @@ namespace Seller.App
                             var messageBox = new MaterialMessageBox("Successfully logged in!", MessageType.Success, MessageButtons.Ok);
                             var result = messageBox.ShowDialog();
 
-                            Selling selling = new Selling();
-                            this.Close();
-                            selling.Show();
+                            Application.Current.MainWindow.Close();
+                            Application.Current.MainWindow = new Selling();
+                            Application.Current.MainWindow.Show();
                         }
                         else
                         {
@@ -83,6 +88,14 @@ namespace Seller.App
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             CheckNetwork();
+            using var tokenService = new TokenService();
+            if (tokenService.TokenExist())
+            {
+                Thread t = new Thread(VerifyToken);
+                t.SetApartmentState(ApartmentState.STA);
+                t.IsBackground = true;
+                t.Start();
+            }
         }
 
         private void CheckNetwork()
@@ -107,11 +120,37 @@ namespace Seller.App
 
         private void close_Click(object sender, RoutedEventArgs e)
         {
-            var messageBox = new MaterialMessageBox("Are you sure exit app!", MessageType.Warning, MessageButtons.YesNo);
+            var messageBox = new MaterialMessageBox("Are you sure exit app!", MessageType.Confirmation, MessageButtons.YesNo);
             var result = messageBox.ShowDialog();
             if (result == true)
             {
                 Application.Current.Shutdown();
+            }
+        }
+
+        private void VerifyToken()
+        {
+            using var authService = new AuthService();
+            var result = authService.RefreshToken();
+            result.Wait();
+            if (result.Result)
+            {
+                Application.Current.Dispatcher.BeginInvoke(
+                 DispatcherPriority.Background,
+                 new Action(() => {
+                     new MaterialMessageBox("Successfully logged in!", MessageType.Success, MessageButtons.Ok).ShowDialog();
+                     Application.Current.MainWindow.Close();
+                     Application.Current.MainWindow = new Selling();
+                     Application.Current.MainWindow.Show();
+                 }));
+            }
+            else
+            {
+                Application.Current.Dispatcher.BeginInvoke(
+                 DispatcherPriority.Background,
+                 new Action(() => {
+                     notifier.ShowError("Token expired!");
+                 }));
             }
         }
     }

@@ -1,6 +1,5 @@
 ﻿using BLL.Dtos.Identity;
 using System;
-using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 
 namespace Seller.App.Services;
@@ -20,28 +19,50 @@ public class TokenService : IDisposable
         Write(REFRESH_TOKEN, viewModel.RefreshToken);
     }
 
+    public void RemoveCreditionals()
+    {
+        Write(FULL_NAME, "");
+        Write(PHONE_NUMBER, "");
+        Write(TOKEN, "");
+        Write(REFRESH_TOKEN, "");
+    }
+
+    public bool TokenExist()
+    {
+        FileInfo fileInfo = new FileInfo(TOKEN);
+        return fileInfo.Exists && GetToken().Length > 0;
+    }
+
     public string GetToken()
     {
         StreamReader streamReader = new StreamReader(TOKEN);
-        return streamReader.ReadToEnd();
+        var token = streamReader.ReadToEnd();
+        streamReader.Close();
+        return token;
     }
 
     public string GetRefreshToken()
     {
         StreamReader streamReader = new StreamReader(REFRESH_TOKEN);
-        return streamReader.ReadToEnd();
+        var token = streamReader.ReadToEnd();
+        streamReader.Close();
+        return token;
     }
 
     public string GetFullName()
     {
         StreamReader streamReader = new StreamReader(FULL_NAME);
-        return streamReader.ReadToEnd();
+        var fullname = streamReader.ReadToEnd();
+        streamReader.Close();
+        return fullname;
     }
 
     public string GetPhoneNumber()
     {
         StreamReader streamReader = new StreamReader(PHONE_NUMBER);
-        return streamReader.ReadToEnd();
+        var number = streamReader.ReadToEnd();
+        streamReader.Close();
+        return number;
     }
 
     //public string GetUserId()

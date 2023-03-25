@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -15,7 +16,6 @@ using ToastNotifications;
 using ToastNotifications.Lifetime;
 using ToastNotifications.Messages;
 using ToastNotifications.Position;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Seller.App.Pages
 {
@@ -52,7 +52,7 @@ namespace Seller.App.Pages
                     offsetY: 10);
 
                 cfg.LifetimeSupervisor = new TimeAndCountBasedLifetimeSupervisor(
-                    notificationLifetime: TimeSpan.FromSeconds(3),
+                    notificationLifetime: TimeSpan.FromSeconds(1),
                     maximumNotificationCount: MaximumNotificationCount.FromCount(3));
 
                 cfg.Dispatcher = Application.Current.Dispatcher;
@@ -69,7 +69,30 @@ namespace Seller.App.Pages
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            productViews.AddRange(GetProductViews());
+            Load();
+        }
+
+        private void GetProductViews()
+        {
+            product = new ProductAPIService();
+            var result = product.GetProducts();
+            result.Wait();
+            var r = result.Result;
+            productViews.AddRange(r ?? new List<DProduct>());
+            Application.Current.Dispatcher.BeginInvoke(
+                  DispatcherPriority.Background,
+                  new Action(() => {
+                      notifier.ShowSuccess("Ma'lumotlar yangilandi!");
+                  }));
+        }
+
+        private void Load()
+        {
+            CheckNetwork();
+            Thread t = new Thread(GetProductViews);
+            t.SetApartmentState(ApartmentState.STA);
+            t.IsBackground = true;
+            t.Start();
         }
 
         private void DispatcherTimer_Tick(object? sender, EventArgs e)
@@ -80,15 +103,24 @@ namespace Seller.App.Pages
 
         private void logout_btn_Click(object sender, RoutedEventArgs e)
         {
-            Application.Current.Shutdown();
+            var messageBox = new MaterialMessageBox("Are you sure logout from profile!", MessageType.Confirmation, MessageButtons.YesNo);
+            var result = messageBox.ShowDialog();
+            if (result == true)
+            {
+                using var tokenService = new TokenService();
+                tokenService.RemoveCreditionals();
+                Application.Current.MainWindow.Close();
+                Application.Current.MainWindow = new MainWindow();
+                Application.Current.MainWindow.Show();
+            }
         }
 
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.D4)
-            {
-                barcode_input.Focus();
-            }
+            //if (e.Key == Key.D4)
+            //{
+            //    barcode_input.Focus();
+            //}
             if (e.Key == Key.Enter)
             {
                 var tr = productViews.FirstOrDefault(i => i.Barcode == barcode_input.Text);
@@ -99,15 +131,6 @@ namespace Seller.App.Pages
                 barcode_input.Clear();
                 SetTotalPrice();
             }
-        }
-
-        private List<DProduct>? GetProductViews()
-        {
-            product = new ProductAPIService();
-            var result = product.GetProducts();
-            result.Wait();
-            var res = result.Result;
-            return res;
         }
 
         private void remove_Click(object sender, RoutedEventArgs e)
@@ -174,7 +197,7 @@ namespace Seller.App.Pages
         private void SetTotalPrice()
         {
             var totalPrice = vm.Transactions.Sum(tr => tr.TotalPrice);
-            total.Text = totalPrice.ToString();
+            total.Text = ConvertToMoneyFormat(totalPrice.ToString());
         }
 
         private void refresh_Click(object sender, RoutedEventArgs e)
@@ -185,7 +208,7 @@ namespace Seller.App.Pages
             plastik.Clear();
             chegirma.Clear();
             barcode_input.Clear();
-            productViews.AddRange(GetProductViews());
+            Load();
         }
 
         private void print_Click(object sender, RoutedEventArgs e)
@@ -218,6 +241,19 @@ namespace Seller.App.Pages
                 {
                     goto start;
                 }
+                else
+                {
+                    messageBox = new MaterialMessageBox("Are you sure exit app?", MessageType.Confirmation, MessageButtons.YesNo);
+                    result = messageBox.ShowDialog();
+                    if (result == true)
+                    {
+                        Application.Current.Shutdown();
+                    }
+                    else
+                    {
+                        goto start;
+                    }
+                }
             }
             else if (networkFailed == true)
             {
@@ -239,15 +275,18 @@ namespace Seller.App.Pages
                 case 1: 
                     {
                         naqd.Text += number;
+                        naqd.Text = ConvertToMoneyFormat(naqd.Text);
                     } break;
                 case 2:
                     {
                         plastik.Text += number;
+                        plastik.Text = ConvertToMoneyFormat(plastik.Text);
                     }
                     break;
                 case 3:
                     {
                         chegirma.Text += number;
+                        chegirma.Text = ConvertToMoneyFormat(chegirma.Text);
                     }
                     break;
                 case 4:
@@ -256,6 +295,35 @@ namespace Seller.App.Pages
                     }
                     break;
             }
+        }
+
+        private string ConvertToMoneyFormat(string text)
+        {
+            if (text.Length < 3 || string.IsNullOrEmpty(text)) return text;
+
+            text = Reverse(text.Replace(" ", ""));
+            string result = string.Empty;
+            for (int i = 0; i < text.Length; i ++)
+            {
+                result += text[i];
+                if ((i+1) % 3 == 0)
+                {
+                    result += " ";
+                }
+            }
+
+            return Reverse(result).Trim();
+        }
+
+        private string Reverse(string text)
+        {
+            string reversed = string.Empty;
+            foreach (char c in text.Reverse())
+            {
+                reversed += c;
+            }
+
+            return reversed;
         }
 
         private void tb_GotFocus(object sender, RoutedEventArgs e)
@@ -289,6 +357,43 @@ namespace Seller.App.Pages
         private void scanerlash_Click(object sender, RoutedEventArgs e)
         {
             barcode_input.Focus();
+        }
+
+        private void naqd_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            var textBox = (TextBox)sender; 
+            switch (activeTextboxIndex)
+            {
+                case 1:
+                    {
+                        naqd.Text = ConvertToMoneyFormat(naqd.Text);
+                    }
+                    break;
+                case 2:
+                    {
+                        plastik.Text = ConvertToMoneyFormat(plastik.Text);
+                    }
+                    break;
+                case 3:
+                    {
+                        chegirma.Text = ConvertToMoneyFormat(chegirma.Text);
+                    }
+                    break;
+                case 4:
+                    {
+
+                    }break;
+            }
+        }
+
+        private void close_btn_Click(object sender, RoutedEventArgs e)
+        {
+            var messageBox = new MaterialMessageBox("Are you sure exit app!", MessageType.Confirmation, MessageButtons.YesNo);
+            var result = messageBox.ShowDialog();
+            if (result == true)
+            {
+                Application.Current.Shutdown();
+            }
         }
     }
 }

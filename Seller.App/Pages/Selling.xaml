@@ -52,7 +52,8 @@
                                          FontSize="18"
                                          x:Name="naqd"
                                          GotFocus="tb_GotFocus"
-                                         Uid="1"></TextBox>
+                                         Uid="1"
+                                         TextChanged="naqd_TextChanged"></TextBox>
                             </materialDesign:Card>
                         </StackPanel>
                     </Grid>
@@ -69,7 +70,8 @@
                                          FontSize="18"
                                          x:Name="plastik"
                                          GotFocus="tb_GotFocus"
-                                         Uid="2"></TextBox>
+                                         Uid="2"
+                                         TextChanged="naqd_TextChanged"></TextBox>
                             </materialDesign:Card>
                         </StackPanel>
                     </Grid>
@@ -86,7 +88,8 @@
                                          FontSize="18"
                                          x:Name="chegirma"
                                          GotFocus="tb_GotFocus"
-                                         Uid="3"></TextBox>
+                                         Uid="3"
+                                         TextChanged="naqd_TextChanged"></TextBox>
                             </materialDesign:Card>
                         </StackPanel>
                     </Grid>
@@ -206,6 +209,8 @@
                         Orientation="Horizontal">
                 <Button Padding="8,10"
                         Height="50"
+                        x:Name="logout_btn"
+                        Click="logout_btn_Click"
                         Background="#b51800"
                         BorderBrush="#b51800">
                     <StackPanel Orientation="Horizontal">
@@ -249,8 +254,8 @@
                                FontSize="14"/>
                     </StackPanel>
 
-                        <Button x:Name="logout_btn"
-                                Click="logout_btn_Click"
+                        <Button x:Name="close_btn"
+                                Click="close_btn_Click"
                                 Background="Transparent"
                                 Padding="0"
                                 Height="46"
@@ -269,7 +274,7 @@
                 <Grid Height="597"
                       Margin="10,10,10,0">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="0"/>
+                        <RowDefinition Height="*"/>
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="*"/>
@@ -278,7 +283,7 @@
                         <RowDefinition Height="1.2*"/>
                     </Grid.RowDefinitions>
 
-                    <Grid Grid.Row="0" Visibility="Collapsed">
+                    <Grid Grid.Row="0">
                         <materialDesign:Card Margin="5,10">
                             <TextBox Padding="10,2"
                                      FontSize="40"

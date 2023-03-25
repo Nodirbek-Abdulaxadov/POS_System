@@ -25,7 +25,6 @@ public class ProductAPIService : IDisposable
     {
         var response = _client.GetStringAsync("product/d");
         var res = response.Result;
-        int a = 0;
         if (response != null)
         {
             return JsonConvert.DeserializeObject<List<DProduct>>(res);

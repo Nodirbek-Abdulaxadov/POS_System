@@ -12,6 +12,7 @@
     <None Remove="assets\close.png" />
     <None Remove="assets\debt.png" />
     <None Remove="assets\left.png" />
+    <None Remove="assets\loader.gif" />
     <None Remove="assets\login.png" />
     <None Remove="assets\login_bg.jpg" />
     <None Remove="assets\logout.png" />
@@ -35,6 +36,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="assets\debt.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="assets\loader.gif">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="assets\logout_left.png">
