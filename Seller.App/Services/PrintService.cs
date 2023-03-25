@@ -42,24 +42,24 @@ public class PrintService : IDisposable
         printer.Append("\n");
         foreach (var item in receipt.Transactions)
         {
-            string text = $"{tr}.  {item.Name}";
-            int strLength = 32 - text.Length;
-            for (int i = 1; i <= strLength; i++)
-            {
-                text += " ";
-            }
-            string temp = $"{item.Quantity}*{item.Price}";
-            text += temp;
-            strLength = 16 - temp.Length;
-            for (int i = 0; i < strLength; i++)
-            {
-                text += " ";
-            }
-            text += item.TotalPrice.ToString();
-            printer.CondensedMode(text);
-            printer.Append("\n");
-            tr++;
-            sum += item.TotalPrice;
+            //string text = $"{tr}.  {item.Name}";
+            //int strLength = 32 - text.Length;
+            //for (int i = 1; i <= strLength; i++)
+            //{
+            //    text += " ";
+            //}
+            //string temp = $"{item.Quantity}*{item.Price}";
+            //text += temp;
+            //strLength = 16 - temp.Length;
+            //for (int i = 0; i < strLength; i++)
+            //{
+            //    text += " ";
+            //}
+            //text += item.TotalPrice.ToString();
+            //printer.CondensedMode(text);
+            //printer.Append("\n");
+            //tr++;
+            //sum += item.TotalPrice;
         }
 
         printer.Separator();

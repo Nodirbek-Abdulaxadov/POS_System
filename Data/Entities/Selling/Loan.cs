@@ -13,7 +13,7 @@ public class Loan : BaseEntity
     public decimal LeftAmount { get; set; }
 
     [Required]
-    public int ReceiptId { get; set; }
+    public int OrderId { get; set; }
     [Required]
     public int CustomerId { get; set; }
 

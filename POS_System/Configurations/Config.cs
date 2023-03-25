@@ -100,7 +100,7 @@ namespace API.Configurations
                   name: CORSOpenPolicy,
                   builder =>
                   {
-                      builder
+                      builder.WithOrigins("https://pos-two-swart.vercel.app/")
                       .AllowAnyOrigin()
                       .AllowAnyMethod()
                       .AllowAnyHeader();

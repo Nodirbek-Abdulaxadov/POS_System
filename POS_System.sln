@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core", "Core\Core.csproj", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataLayer", "Data\DataLayer.csproj", "{EA8C32DB-1AD8-4E1A-972F-906B090BF75F}"
 EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "M-Pos", "M-Pos\M-Pos.vdproj", "{B57D71E7-C7E5-4556-ADED-859BB6F3310A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "API", "POS_System\API.csproj", "{1F6C12EF-EF44-4BE5-8BA4-C314FBEDAB9E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,8 +35,10 @@ Global
 		{EA8C32DB-1AD8-4E1A-972F-906B090BF75F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EA8C32DB-1AD8-4E1A-972F-906B090BF75F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EA8C32DB-1AD8-4E1A-972F-906B090BF75F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B57D71E7-C7E5-4556-ADED-859BB6F3310A}.Debug|Any CPU.ActiveCfg = Debug
-		{B57D71E7-C7E5-4556-ADED-859BB6F3310A}.Release|Any CPU.ActiveCfg = Release
+		{1F6C12EF-EF44-4BE5-8BA4-C314FBEDAB9E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1F6C12EF-EF44-4BE5-8BA4-C314FBEDAB9E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1F6C12EF-EF44-4BE5-8BA4-C314FBEDAB9E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1F6C12EF-EF44-4BE5-8BA4-C314FBEDAB9E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

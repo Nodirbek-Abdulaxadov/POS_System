@@ -1,5 +1,5 @@
-﻿using BLL.Dtos.TransactionDtos;
-using DataLayer.Entities.Selling;
+﻿using DataLayer.Entities.Selling;
+using System.ComponentModel.DataAnnotations;
 
 namespace BLL.Dtos.ReceiptDtos;
 
@@ -13,7 +13,7 @@ public class ReceiptDto : BaseDto
     public bool HasLoan { get; set; }
     public string SellerId { get; set; } = string.Empty;
     public Loan Loan = new Loan();
-    public List<TransactionDto> Transactions = new List<TransactionDto>();
+    public List<Transaction> Transactions = new List<Transaction>();
 
     public static explicit operator ReceiptDto(Receipt v)
         => new ReceiptDto()
@@ -26,7 +26,8 @@ public class ReceiptDto : BaseDto
             HasLoan = v.HasLoan,
             Id = v.Id,
             Loan = v.Loan,
-            SellerId = v.SellerId
+            SellerId = v.SellerId,
+            Transactions = v.Transactions.ToList()
         };
 
     public static explicit operator Receipt(ReceiptDto v)
@@ -40,6 +41,7 @@ public class ReceiptDto : BaseDto
             HasLoan = v.HasLoan,
             Id = v.Id,
             Loan = v.Loan,
-            SellerId = v.SellerId
+            SellerId = v.SellerId,
+            Transactions = v.Transactions.ToList()
         };
 }

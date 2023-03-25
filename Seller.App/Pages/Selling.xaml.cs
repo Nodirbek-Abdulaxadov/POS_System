@@ -235,7 +235,7 @@ namespace Seller.App.Pages
                 receipt.Discount = decimal.Parse(chegirma.Text.Replace(" ", "")); ;
                 receipt.PaidCard = decimal.Parse(plastik.Text.Replace(" ", ""));
                 receipt.PaidCash = decimal.Parse(naqd.Text.Replace(" ", ""));
-                receipt.Transactions = vm.Transactions.ToList();
+                //receipt.Transactions = vm.Transactions.ToList();
 
                 using PrintService printService = new PrintService();
                 printService.printerName = "XP-80";
