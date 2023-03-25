@@ -1,4 +1,5 @@
 ﻿using BLL.Dtos.ProductDtos;
+using DataLayer.Entities.Selling;
 
 namespace BLL.Dtos.TransactionDtos;
 

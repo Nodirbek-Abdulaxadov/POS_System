@@ -197,7 +197,18 @@ namespace Seller.App.Pages
         private void SetTotalPrice()
         {
             var totalPrice = vm.Transactions.Sum(tr => tr.TotalPrice);
-            total.Text = ConvertToMoneyFormat(totalPrice.ToString());
+            if (!string.IsNullOrEmpty(chegirma.Text))
+            {
+                totalPrice -= decimal.Parse(chegirma.Text.Replace(" ", ""));
+            }
+            if (totalPrice > 0)
+            {
+                total.Text = ConvertToMoneyFormat(totalPrice.ToString());
+            }
+            else
+            {
+                total.Text = "0";
+            }
         }
 
         private void refresh_Click(object sender, RoutedEventArgs e)
@@ -215,9 +226,18 @@ namespace Seller.App.Pages
         {
             if (vm.Transactions.Count > 0)
             {
+                using var selling = new SellingService();
+                var receipt = selling.CreateEmptyReceipt();
+                receipt.SellerId = "AAAAA";
+
+
                 using PrintService printService = new PrintService();
                 printService.printerName = "XP-80";
                 printService.Print(vm.Transactions.ToList(), "Nodirbek Abdulaxadov", 1);
+            }
+            else
+            {
+                notifier.ShowWarning("Mahsulot qo'shing!");
             }
         }
 
@@ -295,6 +315,7 @@ namespace Seller.App.Pages
                     }
                     break;
             }
+            SetTotalPrice();
         }
 
         private string ConvertToMoneyFormat(string text)
@@ -384,6 +405,7 @@ namespace Seller.App.Pages
 
                     }break;
             }
+            SetTotalPrice();
         }
 
         private void close_btn_Click(object sender, RoutedEventArgs e)
