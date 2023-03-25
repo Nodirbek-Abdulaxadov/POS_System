@@ -1,6 +1,5 @@
-﻿using BLL.Dtos.TransactionDtos;
+﻿using BLL.Dtos.ReceiptDtos;
 using ESC_POS_USB_NET.Printer;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -11,16 +10,18 @@ namespace Seller.App.Services;
 
 public class PrintService : IDisposable
 {
-    private readonly string PRINTER_NAME = Path.Combine(Path.GetTempPath(), "40c765b3-3e9c-4dd7-b592-f53c83c0bd4a.txt");
+    private readonly string PRINTER_NAME = Path.Combine(Path.GetTempPath(), 
+                                                        "40c765b3-3e9c-4dd7-b592-f53c83c0bd4a.txt");
     public string printerName { get; set; } = string.Empty;
     Printer? printer;
     public PrintService()
 	{
-		//initialize print name
-	}
+        printerName = GetSavedPrinterName();
+    }
 
-	public void Print(List<TransactionDto> transactions, string sellerFullName, int orderId)
+	public void Print(ReceiptDto receipt)
 	{
+        using var tokenService = new TokenService();
 		printer = new Printer(printerName, "UTF-8");
         Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
         printer.Separator();
@@ -39,7 +40,7 @@ public class PrintService : IDisposable
         int tr = 1;
         decimal sum = 0;
         printer.Append("\n");
-        foreach (var item in transactions)
+        foreach (var item in receipt.Transactions)
         {
             string text = $"{tr}.  {item.Name}";
             int strLength = 32 - text.Length;
@@ -64,20 +65,23 @@ public class PrintService : IDisposable
         printer.Separator();
         printer.AlignLeft();
         printer.Append("\n");
-        printer.BoldMode($"Jami summa:                   {sum} so'm");
+        printer.Append($"Naqd:                         {receipt.PaidCash} so'm");
+        printer.Append($"Plastik:                      {receipt.PaidCard} so'm");
+        printer.Append($"Chegirma:                     {receipt.Discount} so'm");
+        printer.Append($"Jami summa:                   {sum} so'm");
         printer.Append("\n");
 
         printer.Separator();
         printer.AlignLeft();
         printer.Append("\n");
-        printer.Append("Sotuvchi:                  Nodirbek Abdulaxadov");
+        printer.Append($"Sotuvchi:               {tokenService.GetFullName()}");
         printer.AlignRight();
         printer.Append("\n");
         printer.AlignLeft();
         printer.Append("Sana:                      " + DateTime.Now.ToString());
 
 
-        string barcode = (100000000000 + orderId).ToString();
+        string barcode = (100000000000 + receipt.Id).ToString();
 
 
         printer.Append("\n");

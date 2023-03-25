@@ -196,18 +196,21 @@ namespace Seller.App.Pages
 
         private void SetTotalPrice()
         {
-            var totalPrice = vm.Transactions.Sum(tr => tr.TotalPrice);
-            if (!string.IsNullOrEmpty(chegirma.Text))
+            if (vm != null)
             {
-                totalPrice -= decimal.Parse(chegirma.Text.Replace(" ", ""));
-            }
-            if (totalPrice > 0)
-            {
-                total.Text = ConvertToMoneyFormat(totalPrice.ToString());
-            }
-            else
-            {
-                total.Text = "0";
+                var totalPrice = vm.Transactions.Sum(tr => tr.TotalPrice);
+                if (!string.IsNullOrEmpty(chegirma.Text))
+                {
+                    totalPrice -= decimal.Parse(chegirma.Text.Replace(" ", ""));
+                }
+                if (totalPrice > 0)
+                {
+                    total.Text = ConvertToMoneyFormat(totalPrice.ToString());
+                }
+                else
+                {
+                    total.Text = "0";
+                }
             }
         }
 
@@ -228,12 +231,15 @@ namespace Seller.App.Pages
             {
                 using var selling = new SellingService();
                 var receipt = selling.CreateEmptyReceipt();
-                receipt.SellerId = "AAAAA";
-
+                receipt.SellerId = "Some guid";
+                receipt.Discount = decimal.Parse(chegirma.Text.Replace(" ", "")); ;
+                receipt.PaidCard = decimal.Parse(plastik.Text.Replace(" ", ""));
+                receipt.PaidCash = decimal.Parse(naqd.Text.Replace(" ", ""));
+                receipt.Transactions = vm.Transactions.ToList();
 
                 using PrintService printService = new PrintService();
                 printService.printerName = "XP-80";
-                printService.Print(vm.Transactions.ToList(), "Nodirbek Abdulaxadov", 1);
+                printService.Print(receipt);
             }
             else
             {
@@ -294,17 +300,20 @@ namespace Seller.App.Pages
             {
                 case 1: 
                     {
+                        if (naqd.Text == "0") naqd.Clear();
                         naqd.Text += number;
                         naqd.Text = ConvertToMoneyFormat(naqd.Text);
                     } break;
                 case 2:
                     {
+                        if (plastik.Text == "0") plastik.Clear();
                         plastik.Text += number;
                         plastik.Text = ConvertToMoneyFormat(plastik.Text);
                     }
                     break;
                 case 3:
                     {
+                        if (chegirma.Text == "0") chegirma.Clear();
                         chegirma.Text += number;
                         chegirma.Text = ConvertToMoneyFormat(chegirma.Text);
                     }

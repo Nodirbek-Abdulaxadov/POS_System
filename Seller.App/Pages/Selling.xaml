@@ -53,6 +53,7 @@
                                          x:Name="naqd"
                                          GotFocus="tb_GotFocus"
                                          Uid="1"
+                                         Text="0"
                                          TextChanged="naqd_TextChanged"></TextBox>
                             </materialDesign:Card>
                         </StackPanel>
@@ -71,6 +72,7 @@
                                          x:Name="plastik"
                                          GotFocus="tb_GotFocus"
                                          Uid="2"
+                                         Text="0"
                                          TextChanged="naqd_TextChanged"></TextBox>
                             </materialDesign:Card>
                         </StackPanel>
@@ -89,6 +91,7 @@
                                          x:Name="chegirma"
                                          GotFocus="tb_GotFocus"
                                          Uid="3"
+                                         Text="0"
                                          TextChanged="naqd_TextChanged"></TextBox>
                             </materialDesign:Card>
                         </StackPanel>
@@ -105,6 +108,7 @@
                                 <TextBox BorderBrush="Black"
                                          FontSize="18"
                                          x:Name="total"
+                                         Text="0"
                                          IsReadOnly="True"></TextBox>
                             </materialDesign:Card>
                         </StackPanel>
