@@ -1,7 +1,5 @@
 ﻿using BLL.Dtos.ProductDtos;
 using BLL.Dtos.TransactionDtos;
-using DataLayer.Entities.Selling;
-using MaterialDesignThemes.Wpf;
 using Seller.App.Components;
 using Seller.App.Models;
 using Seller.App.Services;
@@ -11,7 +9,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -68,7 +65,7 @@ namespace Seller.App.Pages
 
         private void DispatcherTimer_Tick2(object? sender, EventArgs e)
         {
-            CheckNetwork();
+            //CheckNetwork();
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -92,7 +89,7 @@ namespace Seller.App.Pages
 
         private void Load()
         {
-            CheckNetwork();
+            //CheckNetwork();
             Thread t = new Thread(GetProductViews);
             t.SetApartmentState(ApartmentState.STA);
             t.IsBackground = true;
@@ -229,7 +226,7 @@ namespace Seller.App.Pages
         {
             if (vm.Transactions.Count > 0)
             {
-                CheckNetwork();
+                //CheckNetwork();
                 Thread t = new Thread(SaveReceipt);
                 t.SetApartmentState(ApartmentState.STA);
                 t.IsBackground = true;
@@ -268,7 +265,7 @@ namespace Seller.App.Pages
                         {
                             using var printService = new PrintService();
                             printService.printerName = "XP-80";
-                            printService.Print(receipt, vm.Transactions.ToList(), 123);
+                            printService.Print(receipt, vm.Transactions.ToList(), result.Id);
                                       notifier.ShowSuccess("Ma'lumotlar saqlandi!");
                         }
                         else

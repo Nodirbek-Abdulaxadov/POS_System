@@ -11,6 +11,8 @@ public class ProductViewDto : BaseDto
     public string Barcode { get; set; } = string.Empty;
     public int WarningCount { get; set; } = 0;
     public string AdminId { get; set; } = string.Empty;
+    public string CategoryName { get; set; } = string.Empty;
+    public int CategoryId { get; set; }
 
     public static explicit operator ProductViewDto(Product v)
         => new ProductViewDto()
@@ -22,6 +24,7 @@ public class ProductViewDto : BaseDto
             Size = v.Size,
             Barcode = v.Barcode,
             WarningCount = v.WarningCount,
-            AdminId = v.AdminId
+            AdminId = v.AdminId,
+            CategoryId = v.CategoryId
         };
 }

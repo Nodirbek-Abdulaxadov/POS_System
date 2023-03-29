@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataLayer", "Data\DataLayer
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "API", "POS_System\API.csproj", "{1F6C12EF-EF44-4BE5-8BA4-C314FBEDAB9E}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "M-POS", "M-POS\M-POS.vdproj", "{287D1745-78FB-4167-9C63-6D9BAB044ED8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,8 @@ Global
 		{1F6C12EF-EF44-4BE5-8BA4-C314FBEDAB9E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1F6C12EF-EF44-4BE5-8BA4-C314FBEDAB9E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1F6C12EF-EF44-4BE5-8BA4-C314FBEDAB9E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{287D1745-78FB-4167-9C63-6D9BAB044ED8}.Debug|Any CPU.ActiveCfg = Debug
+		{287D1745-78FB-4167-9C63-6D9BAB044ED8}.Release|Any CPU.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

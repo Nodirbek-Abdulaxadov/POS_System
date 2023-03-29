@@ -91,7 +91,21 @@ public class ProductService : IProductService
             throw new ArgumentNullException(nameof(list));
         }
 
-        var dtoList = list.Select(x => (ProductViewDto)x);
+        var dtoList = list.Select(x =>
+        {
+            var model = (ProductViewDto)x;
+            var category = _unitOfWork.Categories.GetByIdAsync(model.Id);
+            if (category.Result != null)
+            {
+                model.CategoryName = category.Result.Name;
+            }
+            else
+            {
+                model.CategoryName = "Noma'lum";
+            }
+
+            return model;
+        });
         return dtoList;
     }
 
@@ -99,7 +113,21 @@ public class ProductService : IProductService
     {
         var dtoList = (await _unitOfWork.Products.GetAllAsync())
                                                    .Where(w => w.IsDeleted == true)
-                                                   .Select(i => (ProductViewDto)i)
+                                                   .Select(i =>
+                                                   {
+                                                       var model = (ProductViewDto)i;
+                                                       var category = _unitOfWork.Categories.GetByIdAsync(model.Id);
+                                                       if (category.Result != null)
+                                                       {
+                                                           model.CategoryName = category.Result.Name;
+                                                       }
+                                                       else
+                                                       {
+                                                           model.CategoryName = "Noma'lum";
+                                                       }
+
+                                                       return model;
+                                                   })
                                                    .ToList();
 
         PagedList<ProductViewDto> pagedList = new(dtoList.ToList(),
@@ -130,7 +158,18 @@ public class ProductService : IProductService
             throw new ArgumentNullException(nameof(product));
         }
 
-        return (ProductViewDto)product;
+        var model = (ProductViewDto)product;
+        var category = _unitOfWork.Categories.GetByIdAsync(model.Id);
+        if (category.Result != null)
+        {
+            model.CategoryName = category.Result.Name;
+        }
+        else
+        {
+            model.CategoryName = "Noma'lum";
+        }
+
+        return model;
     }
 
     public async Task<List<DProduct>> GetDProducts()
@@ -169,7 +208,21 @@ public class ProductService : IProductService
     {
         var dtoList = (await _unitOfWork.Products.GetAllAsync())
                                                    .Where(w => w.IsDeleted == false)
-                                                   .Select(i => (ProductViewDto)i)
+                                                   .Select(i =>
+                                                   {
+                                                       var model = (ProductViewDto)i;
+                                                       var category = _unitOfWork.Categories.GetByIdAsync(model.Id);
+                                                       if (category.Result != null)
+                                                       {
+                                                           model.CategoryName = category.Result.Name;
+                                                       }
+                                                       else
+                                                       {
+                                                           model.CategoryName = "Noma'lum";
+                                                       }
+
+                                                       return model;
+                                                   })
                                                    .ToList();
 
         PagedList<ProductViewDto> pagedList = new(dtoList.ToList(),
@@ -182,26 +235,6 @@ public class ProductService : IProductService
         }
 
         return pagedList.ToPagedList(dtoList, pageSize, pageNumber);
-    }
-
-    /// <summary>
-    /// Remove product by id method
-    /// </summary>
-    /// <param name="id"></param>
-    /// <returns></returns>
-    /// <exception cref="ArgumentNullException"></exception>
-    public async Task RemoveAsync(int id)
-    {
-        var model = await _unitOfWork.Products.GetByIdAsync(id);
-
-        if (model == null)
-        {
-            throw new ArgumentNullException(nameof(model));
-        }
-
-        model.IsDeleted = true;
-        await _unitOfWork.Products.UpdateAsync(model);
-        await _unitOfWork.SaveAsync();
     }
 
     /// <summary>
