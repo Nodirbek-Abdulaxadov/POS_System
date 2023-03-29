@@ -11,6 +11,7 @@ public class AddProductDto
     public string Barcode { get; set; } = string.Empty;
     public int WarningCount { get; set; }
 
+    public int CategoryId { get; set; }
     public string AdminId { get; set; } = string.Empty;
 
     public static explicit operator Product(AddProductDto v)
@@ -24,6 +25,7 @@ public class AddProductDto
             AdminId = v.AdminId,
             WarningCount = v.WarningCount,
             AddedDate = DateTime.Now.ToString(),
-            IsDeleted = false
+            IsDeleted = false,
+            CategoryId = v.CategoryId
         };
 }

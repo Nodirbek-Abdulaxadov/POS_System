@@ -12,6 +12,8 @@ public class ProductUpdateDto
     public string Barcode { get; set; } = string.Empty;
     public int WarningCount { get; set; }
 
+    public int CategoryId { get; set; }
+
     public static explicit operator Product(ProductUpdateDto v)
         => new Product()
         {
@@ -22,5 +24,6 @@ public class ProductUpdateDto
             Size = v.Size,
             Barcode = v.Barcode,
             WarningCount = v.WarningCount,
+            CategoryId = v.CategoryId
         };
 }
