@@ -153,5 +153,12 @@ namespace Seller.App
                  }));
             }
         }
+
+        private void forgot_password_Click(object sender, RoutedEventArgs e)
+        {
+            Application.Current.MainWindow.Close();
+            Application.Current.MainWindow = new ForgotPassword();
+            Application.Current.MainWindow.Show();
+        }
     }
 }

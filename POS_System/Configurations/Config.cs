@@ -54,6 +54,8 @@ namespace API.Configurations
             builder.Services.AddTransient<IReceiptService, ReceiptService>();
             builder.Services.AddTransient<ICategoryService, CategoryService>();
 
+            builder.Services.AddTransient<IMessageService, MessageService>();
+
             //Add dbContext
             builder.Services.AddDbContext<AppDbContext>(options =>
                 options.UseNpgsql(builder.Configuration.GetConnectionString("LocalDB")));

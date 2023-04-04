@@ -12,6 +12,7 @@
     <None Remove="assets\close.png" />
     <None Remove="assets\debt.png" />
     <None Remove="assets\left.png" />
+    <None Remove="assets\left_indigo.png" />
     <None Remove="assets\loader.gif" />
     <None Remove="assets\login.png" />
     <None Remove="assets\login_bg.jpg" />
@@ -36,6 +37,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="assets\debt.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="assets\left_indigo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="assets\loader.gif">
@@ -67,8 +71,9 @@
   <ItemGroup>
     <PackageReference Include="ESC-POS-USB-NET" Version="1.1.3" />
     <PackageReference Include="MaterialDesignThemes" Version="4.7.1" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="System.Drawing.Common" Version="7.0.0" />
+    <PackageReference Include="System.Management" Version="7.0.0" />
     <PackageReference Include="ToastNotifications" Version="2.5.1" />
     <PackageReference Include="ToastNotifications.Messages" Version="2.5.1" />
   </ItemGroup>

@@ -1,10 +1,13 @@
-﻿using BLL.Dtos.WarehouseDtos;
+﻿using BLL.Dtos.CategoryDtos;
+using BLL.Dtos.WarehouseDtos;
 using BLL.Dtos.WarehouseItemDtos;
+using BLL.Helpers;
 using BLL.Interfaces;
 using BLL.Services;
 using BLL.Validations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace API.Controllers
 {
@@ -40,6 +43,29 @@ namespace API.Controllers
             {
                 var list = await _itemService.GetPagedAsync(pageSize, pageNumber, warehouseId);
                 return Ok(list);
+            }
+            catch (MarketException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("archived/paged")]
+        public async Task<ActionResult<IEnumerable<CategoryViewDto>>> GetArchived(int pageSize, int pageNumber)
+        {
+            try
+            {
+                var list = await _itemService.GetArchivedAsync(pageSize, pageNumber);
+                var json = JsonConvert.SerializeObject(list, Formatting.Indented,
+                new JsonSerializerSettings
+                {
+                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                });
+                return Ok(json);
             }
             catch (MarketException ex)
             {
@@ -111,8 +137,46 @@ namespace API.Controllers
             try
             {
                 var model = await _itemService.GetByIdAsync(id);
-                await _itemService.RemoveAsync(id);
-                return NoContent();
+                await _itemService.ActionAsync(id, ActionType.Remove);
+                return Ok();
+            }
+            catch (ArgumentNullException)
+            {
+                return NotFound();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut("archive/{id}")]
+        public async Task<IActionResult> Archive(int id)
+        {
+            try
+            {
+                var model = await _itemService.GetByIdAsync(id);
+                await _itemService.ActionAsync(id, ActionType.Archive);
+                return Ok();
+            }
+            catch (ArgumentNullException)
+            {
+                return NotFound();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut("recover/{id}")]
+        public async Task<IActionResult> Recover(int id)
+        {
+            try
+            {
+                var model = await _itemService.GetByIdAsync(id);
+                await _itemService.ActionAsync(id, ActionType.Recover);
+                return Ok();
             }
             catch (ArgumentNullException)
             {

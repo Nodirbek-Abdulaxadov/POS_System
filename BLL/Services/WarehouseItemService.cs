@@ -16,6 +16,40 @@ public class WarehouseItemService : IWarehouseItemService
         _unitOfWork = unitOfWork;
     }
 
+    public async Task ActionAsync(int id, ActionType action)
+    {
+        var model = await _unitOfWork.WarehouseItems.GetByIdAsync(id);
+
+        if (model == null)
+        {
+            throw new ArgumentNullException(nameof(model));
+        }
+
+        switch (action)
+        {
+            case ActionType.Archive:
+                {
+                    model.IsDeleted = true;
+
+                    await _unitOfWork.WarehouseItems.UpdateAsync(model);
+                }
+                break;
+            case ActionType.Recover:
+                {
+                    model.IsDeleted = false;
+                    await _unitOfWork.WarehouseItems.UpdateAsync(model);
+                }
+                break;
+            case ActionType.Remove:
+                {
+                    await _unitOfWork.WarehouseItems.RemoveAsync(model);
+                }
+                break;
+        }
+
+        await _unitOfWork.SaveAsync();
+    }
+
     /// <summary>
     /// Create new WarehouseItem
     /// </summary>
@@ -57,6 +91,25 @@ public class WarehouseItemService : IWarehouseItemService
         return dtoList;
     }
 
+    public async Task<PagedList<WarehouseItemDto>> GetArchivedAsync(int pageSize, int pageNumber)
+    {
+        var dtoList = (await _unitOfWork.WarehouseItems.GetAllAsync())
+                                                   .Where(w => w.IsDeleted == true)
+                                                   .Select(i => (WarehouseItemDto)i)
+                                                   .ToList();
+
+        PagedList<WarehouseItemDto> pagedList = new(dtoList.ToList(),
+                                                     dtoList.Count(),
+                                                     pageSize, pageNumber);
+
+        if (pageNumber > pagedList.TotalPages || pageNumber < 1)
+        {
+            throw new MarketException("Page not fount!");
+        }
+
+        return pagedList.ToPagedList(dtoList, pageSize, pageNumber);
+    }
+
     public async Task<WarehouseItemDto> GetByIdAsync(int id)
     {
         var warehouseItem = await _unitOfWork.WarehouseItems.GetByIdAsync(id);
@@ -70,7 +123,10 @@ public class WarehouseItemService : IWarehouseItemService
 
     public async Task<PagedList<WarehouseItemDto>> GetPagedAsync(int pageSize, int pageNumber, int warehouseId)
     {
-        var dtoList = await GetAllAsync(warehouseId);
+        var dtoList = (await _unitOfWork.WarehouseItems.GetAllAsync())
+                                                   .Where(w => w.IsDeleted == false && w.WarehouseId == warehouseId)
+                                                   .Select(i => (WarehouseItemDto)i)
+                                                   .ToList();
 
         PagedList<WarehouseItemDto> pagedList = new(dtoList.ToList(),
                                                      dtoList.Count(),
@@ -101,19 +157,5 @@ public class WarehouseItemService : IWarehouseItemService
         await _unitOfWork.SaveAsync();
 
         return await GetByIdAsync(model.Id);
-    }
-    
-    public async Task RemoveAsync(int id)
-    {
-        var model = await _unitOfWork.WarehouseItems.GetByIdAsync(id);
-
-        if (model == null)
-        {
-            throw new ArgumentNullException(nameof(model));
-        }
-
-        model.IsDeleted = true;
-        await _unitOfWork.WarehouseItems.UpdateAsync(model);
-        await _unitOfWork.SaveAsync();
     }
 }

@@ -55,12 +55,16 @@
                     Background="#FF7C38F5" 
                     x:Name="login_btn"
                     Click="login_btn_Click"/>
-            <TextBlock Text="Parolni unutdingizmi?" VerticalAlignment="Bottom" 
+            <Button Content="Parolni unutdingizmi?" VerticalAlignment="Bottom" 
                        HorizontalAlignment="Center"
                        FontWeight="Bold" 
                        FontSize="14" 
                        Foreground="#0000ff"
-                       Margin="0,0,0,20"/>
+                       Margin="0,0,0,20"
+                       x:Name="forgot_password"
+                       Background="Transparent"
+                       BorderBrush="Transparent"
+                       Click="forgot_password_Click"/>
         </Grid>
 
         

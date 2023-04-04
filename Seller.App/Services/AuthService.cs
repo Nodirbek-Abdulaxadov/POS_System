@@ -1,4 +1,5 @@
 ﻿using BLL.Dtos.Identity;
+using BLL.Dtos.MessageDtos;
 using Newtonsoft.Json;
 using Seller.App.Models;
 using System;
@@ -72,5 +73,21 @@ public class AuthService : IDisposable
         {
             return false;
         }
+    }
+
+    public async Task<CheckOtpDto> SendOtp(string phoneNumber)
+    {
+        using var httpClient = new HttpClient();
+        var content = new StringContent("", Encoding.UTF8, "application/json");
+        string deviceId = DeviceInfo.ReturnHardWareID().Result;
+        using var response = await httpClient.PostAsync(Constants.BASE_URL + $"otp/send/{phoneNumber}/{deviceId}" , content);
+        if (response.IsSuccessStatusCode)
+        {
+            var responseContent = await response.Content.ReadAsStringAsync();
+            var otpResponse = JsonConvert.DeserializeObject<CheckOtpDto>(responseContent);
+            return otpResponse;
+        }
+
+        return null;
     }
 }

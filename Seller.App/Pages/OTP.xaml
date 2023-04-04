@@ -1,0 +1,33 @@
+﻿<Page x:Class="Seller.App.Pages.OTP"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      xmlns:local="clr-namespace:Seller.App.Pages"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="380"
+      Title="OTP">
+
+    <Grid>
+        <StackPanel VerticalAlignment="Center" Margin="10,0,10,0" Height="180">
+            <TextBlock Text="Tasdiqlash kodini olish:"
+                       FontSize="20"/>
+
+            <TextBox materialDesign:HintAssist.Hint="Telefon raqamingiz" 
+                         Style="{StaticResource MaterialDesignFloatingHintTextBox}" 
+                         Height="60"
+                         FontSize="18"
+                         Margin="0,10,0,0"
+                         x:Name="phone_input"
+                         />
+
+        </StackPanel>
+        <Button VerticalAlignment="Top" Content="Yuborish"  
+                    Margin="40,260,40,0" Height="37" 
+                    Effect="{DynamicResource MaterialDesignShadowDepth2}" 
+                    Background="#FF7C38F5" 
+                    x:Name="send_btn"
+                    Click="send_btn_Click"/>
+    </Grid>
+</Page>

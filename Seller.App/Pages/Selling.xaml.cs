@@ -70,7 +70,7 @@ namespace Seller.App.Pages
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            Load();
+           // Load();
         }
 
         private void GetProductViews()
