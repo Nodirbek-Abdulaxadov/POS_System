@@ -1,9 +1,6 @@
-﻿using BLL.Dtos.CategoryDtos;
-using BLL.Dtos.WarehouseDtos;
-using BLL.Dtos.WarehouseItemDtos;
+﻿using BLL.Dtos.WarehouseItemDtos;
 using BLL.Helpers;
 using BLL.Interfaces;
-using BLL.Services;
 using BLL.Validations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,7 +10,7 @@ namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class WarehouseItemController : ControllerBase
     {
         private readonly IWarehouseItemService _itemService;
@@ -24,7 +21,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<WarehouseItemDto>>> Get()
+        public async Task<ActionResult<IEnumerable<WarehouseItemViewDto>>> Get()
         {
             try
             {
@@ -37,7 +34,7 @@ namespace API.Controllers
             }
         }
         [HttpGet("paged")]
-        public async Task<ActionResult<IEnumerable<WarehouseItemDto>>> Get(int pageSize, int pageNumber, int warehouseId)
+        public async Task<ActionResult<IEnumerable<WarehouseItemViewDto>>> Get(int pageSize, int pageNumber, int warehouseId)
         {
             try
             {
@@ -55,7 +52,7 @@ namespace API.Controllers
         }
 
         [HttpGet("archived/paged")]
-        public async Task<ActionResult<IEnumerable<CategoryViewDto>>> GetArchived(int pageSize, int pageNumber)
+        public async Task<ActionResult<IEnumerable<WarehouseItemViewDto>>> GetArchived(int pageSize, int pageNumber)
         {
             try
             {
@@ -78,7 +75,7 @@ namespace API.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<WarehouseItemDto>> GetById(int id)
+        public async Task<ActionResult<WarehouseItemViewDto>> GetById(int id)
         {
             try
             {

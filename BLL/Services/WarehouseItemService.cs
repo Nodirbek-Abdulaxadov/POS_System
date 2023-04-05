@@ -74,8 +74,6 @@ public class WarehouseItemService : IWarehouseItemService
             throw new MarketException("All fields must be positive numbers!");
         }
 
-        var list = await GetAllAsync(dto.WarehouseId);
-
         var model = await _unitOfWork.WarehouseItems.AddAsync((WarehouseItem)dto);
         await _unitOfWork.SaveAsync();
 
