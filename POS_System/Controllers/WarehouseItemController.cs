@@ -13,7 +13,7 @@ namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class WarehouseItemController : ControllerBase
     {
         private readonly IWarehouseItemService _itemService;
@@ -24,11 +24,11 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<WarehouseItemDto>>> Get(int warehouseId)
+        public async Task<ActionResult<IEnumerable<WarehouseItemDto>>> Get()
         {
             try
             {
-                var list = await _itemService.GetAllAsync(warehouseId);
+                var list = await _itemService.GetAllAsync();
                 return Ok(list);
             }
             catch (Exception ex)
