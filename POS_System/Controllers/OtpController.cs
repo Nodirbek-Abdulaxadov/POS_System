@@ -29,7 +29,7 @@ public class OtpController : ControllerBase
             return BadRequest();
         }
 
-        if (PhoneNumberIsExist(phoneNumber))
+        if (!PhoneNumberIsExist(phoneNumber))
         {
             return NotFound();
         }

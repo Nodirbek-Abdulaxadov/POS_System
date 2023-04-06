@@ -30,7 +30,7 @@ namespace API.Controllers
             }
             catch (MarketException ex)
             {
-                _logger.LogError("\n"+ex.Message.Substring(0, 100));
+                _logger.LogError(ex.Message.ToString());
                 return StatusCode(409, ex.Message);
             }
             catch (Exception ex)

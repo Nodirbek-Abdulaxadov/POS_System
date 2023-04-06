@@ -80,10 +80,11 @@ public class AuthService : IDisposable
         using var httpClient = new HttpClient();
         var content = new StringContent("", Encoding.UTF8, "application/json");
         string deviceId = DeviceInfo.ReturnHardWareID().Result;
-        using var response = await httpClient.PostAsync(Constants.BASE_URL + $"otp/send/{phoneNumber}/{deviceId}" , content);
-        if (response.IsSuccessStatusCode)
+        using var response = httpClient.PostAsync(Constants.BASE_URL + $"otp/send/{phoneNumber.Replace("+", "")}/{deviceId}" , content);
+        response.Wait();
+        if (response.Result.IsSuccessStatusCode)
         {
-            var responseContent = await response.Content.ReadAsStringAsync();
+            var responseContent = await response.Result.Content.ReadAsStringAsync();
             var otpResponse = JsonConvert.DeserializeObject<CheckOtpDto>(responseContent);
             return otpResponse;
         }
