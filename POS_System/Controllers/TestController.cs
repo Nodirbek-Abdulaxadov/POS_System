@@ -7,6 +7,7 @@ namespace API.Controllers
     [ApiController]
     public class TestController : ControllerBase
     {
+        [HttpGet("now")]
         public IActionResult Get()
         {
             var time = DateTime.Now;
