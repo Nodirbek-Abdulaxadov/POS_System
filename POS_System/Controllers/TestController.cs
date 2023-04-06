@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using TimeZoneConverter;
 
 namespace API.Controllers
 {
@@ -10,20 +12,14 @@ namespace API.Controllers
         [HttpGet("now")]
         public IActionResult Get()
         {
-            var time = DateTime.Now;
-            var utcTime = DateTime.UtcNow;
-            var universalTime = time.ToUniversalTime();
-            var local = utcTime.ToLocalTime();
+            return Ok(LocalTime());
+        }
 
-            var data = new
-            {
-                time, 
-                utcTime,
-                universalTime,
-                local
-            };
-
-            return Ok(data);
+        private DateTime LocalTime()
+        {
+            DateTime utcTime = DateTime.UtcNow; // Get current UTC time
+            TimeZoneInfo timeZone = TZConvert.GetTimeZoneInfo("Pakistan Standard Time"); // Set the time zone
+            return TimeZoneInfo.ConvertTimeFromUtc(utcTime, timeZone);
         }
     }
 }
