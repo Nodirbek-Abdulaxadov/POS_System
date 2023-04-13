@@ -10,7 +10,7 @@ namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class WarehouseItemController : ControllerBase
     {
         private readonly IWarehouseItemService _itemService;
@@ -34,11 +34,38 @@ namespace API.Controllers
             }
         }
         [HttpGet("paged")]
-        public async Task<ActionResult<IEnumerable<WarehouseItemViewDto>>> Get(int pageSize, int pageNumber, int warehouseId)
+        public async Task<IActionResult> Get(int pageSize, int pageNumber, int warehouseId)
         {
             try
             {
                 var list = await _itemService.GetPagedAsync(pageSize, pageNumber, warehouseId);
+                return Ok(list);
+            }
+            catch (MarketException)
+            {
+                 return Ok(new PagedList<WarehouseItemViewDto>(new List<WarehouseItemViewDto>(), 0, 0, 0));
+            }
+            catch (ArgumentNullException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("paged/all")]
+        public async Task<ActionResult<IEnumerable<WarehouseItemViewDto>>> GetAll()
+        {
+            try
+            {
+                var list = await _itemService.GetAllAsPaged();
+                if (list.Data.Count == 0)
+                {
+                    list.Data = new List<WarehouseItemViewDto>();
+                }
+
                 return Ok(list);
             }
             catch (MarketException ex)

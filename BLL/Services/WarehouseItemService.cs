@@ -80,6 +80,20 @@ public class WarehouseItemService : IWarehouseItemService
         return (WarehouseItemDto)model;
     }
 
+    public async Task<PagedList<WarehouseItemViewDto>> GetAllAsPaged()
+    {
+        var dtoList = (await _unitOfWork.WarehouseItems.GetAllAsync())
+                                                   .Where(w => w.IsDeleted == false);
+
+        var list = await Convert(dtoList);
+
+        PagedList<WarehouseItemViewDto> pagedList = new(list.ToList(),
+                                                     dtoList.Count(),
+                                                     dtoList.Count(), 1);
+
+        return pagedList.ToPagedList(list, dtoList.Count(), 1);
+    }
+
     public async Task<IEnumerable<WarehouseItemViewDto>> GetAllAsync()
     {
         var list = (await _unitOfWork.WarehouseItems.GetAllAsync())
@@ -145,16 +159,21 @@ public class WarehouseItemService : IWarehouseItemService
     public async Task<PagedList<WarehouseItemViewDto>> GetPagedAsync(int pageSize, int pageNumber, int warehouseId)
     {
         var dtoList = (await _unitOfWork.WarehouseItems.GetAllAsync())
-                                                   .Where(w => w.IsDeleted == false);
+                                                   .Where(w => w.IsDeleted == false && w.WarehouseId == warehouseId);
 
         var list = await Convert(dtoList);
         PagedList<WarehouseItemViewDto> pagedList = new(list.ToList(),
                                                      dtoList.Count(),
                                                      pageSize, pageNumber);
 
+        if (pagedList.Data.Count == 0)
+        {
+            throw new MarketException("Empty list");
+        }
+
         if (pageNumber > pagedList.TotalPages || pageNumber < 1)
         {
-            throw new MarketException("Page not fount!");
+            throw new ArgumentNullException("Page not fount!");
         }
 
 

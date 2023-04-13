@@ -6,6 +6,7 @@ namespace BLL.Interfaces;
 public interface IWarehouseItemService
 {
     Task<PagedList<WarehouseItemViewDto>> GetPagedAsync(int pageSize, int pageNumber, int warehouseId);
+    Task<PagedList<WarehouseItemViewDto>> GetAllAsPaged();
     Task<PagedList<WarehouseItemViewDto>> GetArchivedAsync(int pageSize, int pageNumber);
     Task<IEnumerable<WarehouseItemViewDto>> GetAllAsync();
 
