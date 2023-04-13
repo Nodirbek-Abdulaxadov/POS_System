@@ -10,7 +10,7 @@ namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class WarehouseItemController : ControllerBase
     {
         private readonly IWarehouseItemService _itemService;
