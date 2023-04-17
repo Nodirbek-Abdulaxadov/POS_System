@@ -1,4 +1,5 @@
 ﻿using BLL.Dtos.CategoryDtos;
+using BLL.Dtos.WarehouseDtos;
 using BLL.Helpers;
 using BLL.Interfaces;
 using BLL.Validations;
@@ -47,7 +48,11 @@ public class CategoryController : ControllerBase
             });
             return Ok(json);
         }
-        catch (MarketException ex)
+        catch (MarketException)
+        {
+            return Ok(new PagedList<CategoryViewDto>(new List<CategoryViewDto>(), 0, 0, 0));
+        }
+        catch (ArgumentNullException ex)
         {
             return NotFound(ex.Message);
         }
@@ -70,7 +75,11 @@ public class CategoryController : ControllerBase
             });
             return Ok(json);
         }
-        catch (MarketException ex)
+        catch (MarketException)
+        {
+            return Ok(new PagedList<CategoryViewDto>(new List<CategoryViewDto>(), 0, 0, 0));
+        }
+        catch (ArgumentNullException ex)
         {
             return NotFound(ex.Message);
         }

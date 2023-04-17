@@ -1,4 +1,5 @@
 ﻿using BLL.Dtos.ProductDtos;
+using BLL.Dtos.WarehouseDtos;
 using BLL.Helpers;
 using BLL.Interfaces;
 using BLL.Validations;
@@ -61,7 +62,11 @@ namespace API.Controllers
                 });
                 return Ok(json);
             }
-            catch (MarketException ex)
+            catch (MarketException)
+            {
+                return Ok(new PagedList<ProductViewDto>(new List<ProductViewDto>(), 0, 0, 0));
+            }
+            catch (ArgumentNullException ex)
             {
                 return NotFound(ex.Message);
             }
@@ -84,7 +89,11 @@ namespace API.Controllers
                 });
                 return Ok(json);
             }
-            catch (MarketException ex)
+            catch (MarketException)
+            {
+                return Ok(new PagedList<ProductViewDto>(new List<ProductViewDto>(), 0, 0, 0));
+            }
+            catch (ArgumentNullException ex)
             {
                 return NotFound(ex.Message);
             }

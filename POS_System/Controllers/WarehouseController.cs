@@ -48,7 +48,11 @@ namespace API.Controllers
                 });
                 return Ok(json);
             }
-            catch (MarketException ex)
+            catch (MarketException)
+            {
+                return Ok(new PagedList<WarehouseViewDto>(new List<WarehouseViewDto>(), 0, 0, 0));
+            }
+            catch (ArgumentNullException ex)
             {
                 return NotFound(ex.Message);
             }
@@ -71,7 +75,11 @@ namespace API.Controllers
                 });
                 return Ok(json);
             }
-            catch (MarketException ex)
+            catch (MarketException)
+            {
+                return Ok(new PagedList<WarehouseViewDto>(new List<WarehouseViewDto>(), 0, 0, 0));
+            }
+            catch (ArgumentNullException ex)
             {
                 return NotFound(ex.Message);
             }

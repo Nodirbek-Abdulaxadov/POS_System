@@ -127,6 +127,10 @@ namespace API.Controllers
                 var result = await _itemService.AddAsync(model);
                 return StatusCode(201, result);
             }
+            catch (ArgumentNullException)
+            {
+                return StatusCode(410, "Null kelyaptida bro!");
+            }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);

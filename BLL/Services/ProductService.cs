@@ -134,9 +134,14 @@ public class ProductService : IProductService
                                                      dtoList.Count(),
                                                      pageSize, pageNumber);
 
+        if (pagedList.Data.Count == 0)
+        {
+            throw new MarketException("Empty list");
+        }
+
         if (pageNumber > pagedList.TotalPages || pageNumber < 1)
         {
-            throw new MarketException("Page not fount!");
+            throw new ArgumentNullException("Page not fount!");
         }
 
         return pagedList.ToPagedList(dtoList, pageSize, pageNumber);
